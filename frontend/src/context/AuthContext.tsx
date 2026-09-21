@@ -129,8 +129,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password: credentials.password,
         });
       } catch (primaryErr: any) {
-        // If the primary endpoint returned 404 (Hostinger deploy in progress), fallback to local auth endpoint
-        if (primaryErr.response?.status === 404) {
+        // If the primary endpoint returned 404 and running in local development, fallback to local backend
+        const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        if (primaryErr.response?.status === 404 && isLocal) {
           try {
             const fallbackFetch = await fetch('http://localhost:4000/api/auth/login', {
               method: 'POST',
