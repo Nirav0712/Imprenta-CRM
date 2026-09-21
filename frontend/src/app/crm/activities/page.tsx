@@ -41,8 +41,15 @@ export default function CrmActivitiesPage() {
         crmApi.getActivities(undefined, undefined, 100),
         contactsApi.getAll(),
       ]);
-      setActivities(acts || []);
-      setContacts(contactList?.contacts || contactList || []);
+      setActivities(Array.isArray(acts) ? acts : []);
+      const extractedContacts = Array.isArray(contactList?.data)
+        ? contactList.data
+        : Array.isArray(contactList)
+        ? contactList
+        : Array.isArray(contactList?.contacts)
+        ? contactList.contacts
+        : [];
+      setContacts(extractedContacts);
     } catch (err) {
       setErrorBanner(extractErrorMessage(err));
     } finally {
@@ -196,11 +203,12 @@ export default function CrmActivitiesPage() {
                   className="mt-1 w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 >
                   <option value="">Select Contact...</option>
-                  {contacts.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.fullName || c.firstName || 'Contact'} ({c.company || c.phoneNumber || c.email})
-                    </option>
-                  ))}
+                  {Array.isArray(contacts) &&
+                    contacts.map((c) => (
+                      <option key={c._id} value={c._id}>
+                        {c.fullName || c.firstName || 'Contact'} ({c.company || c.phoneNumber || c.email})
+                      </option>
+                    ))}
                 </select>
               </div>
 
