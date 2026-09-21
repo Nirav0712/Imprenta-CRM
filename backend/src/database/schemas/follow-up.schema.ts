@@ -11,6 +11,9 @@ export class FollowUp {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Contact', required: true, index: true })
   contactId: Types.ObjectId;
 
+  @Prop({ trim: true, default: 'default-org', index: true })
+  organizationId: string;
+
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Lead', index: true })
   leadId?: Types.ObjectId;
 
@@ -46,4 +49,5 @@ export class FollowUp {
 }
 
 export const FollowUpSchema = SchemaFactory.createForClass(FollowUp);
+FollowUpSchema.index({ organizationId: 1, status: 1, dueDate: 1 });
 FollowUpSchema.index({ dueDate: 1, status: 1 });

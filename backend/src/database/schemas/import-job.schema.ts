@@ -8,6 +8,9 @@ export class ImportJob {
   @Prop({ required: true })
   filename: string;
 
+  @Prop({ trim: true, default: 'default-org', index: true })
+  organizationId: string;
+
   @Prop({ required: true, enum: ['csv', 'xlsx', 'xls', 'xml'] })
   fileFormat: string;
 

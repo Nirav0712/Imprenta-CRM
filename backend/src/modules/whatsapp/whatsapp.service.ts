@@ -500,7 +500,8 @@ export class WhatsAppService implements OnModuleInit {
    * Meta Webhook challenge verification (GET)
    */
   verifyWebhook(mode: string, token: string, challenge: string, configuredToken?: string): string {
-    if (mode === 'subscribe' && token === (configuredToken || 'marketing_auto_webhook_verify')) {
+    const expected = configuredToken || process.env.META_VERIFY_TOKEN || 'marketing_auto_webhook_verify';
+    if (mode === 'subscribe' && token === expected) {
       return challenge;
     }
     throw new BadRequestException('Webhook verification token mismatch');

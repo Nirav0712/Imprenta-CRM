@@ -19,6 +19,23 @@ export function extractErrorMessage(err: any): string {
   return err.message || 'An unexpected error occurred';
 }
 
+// Authentication & Token support
+export function setAuthToken(token: string | null) {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+}
+
+export function setApiKey(apiKey: string | null) {
+  if (apiKey) {
+    api.defaults.headers.common['x-api-key'] = apiKey;
+  } else {
+    delete api.defaults.headers.common['x-api-key'];
+  }
+}
+
 // Multi-tenant organization support
 let currentOrganizationId = 'default-org';
 export function setTenantOrganizationId(orgId: string) {

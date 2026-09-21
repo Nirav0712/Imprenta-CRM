@@ -10,6 +10,9 @@ export class Activity {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Contact', required: true, index: true })
   contactId: Types.ObjectId;
 
+  @Prop({ trim: true, default: 'default-org', index: true })
+  organizationId: string;
+
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Lead', index: true })
   leadId?: Types.ObjectId;
 
@@ -37,4 +40,6 @@ export class Activity {
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);
+ActivitySchema.index({ organizationId: 1, performedAt: -1 });
+ActivitySchema.index({ organizationId: 1, contactId: 1 });
 ActivitySchema.index({ contactId: 1, performedAt: -1 });

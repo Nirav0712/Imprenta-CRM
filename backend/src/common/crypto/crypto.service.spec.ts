@@ -42,4 +42,44 @@ describe('CryptoService', () => {
     const isInvalid = cryptoService.verifyMetaSignature(rawBody, 'sha256=invalidhash', appSecret);
     expect(isInvalid).toBe(false);
   });
+
+  describe('JWT Cryptographic Verification', () => {
+    const secret = 'super_secret_jwt_key_for_testing_12345';
+
+    it('should sign and verify valid JWT token correctly', () => {
+      const payload = { userId: 'user_1', organizationId: 'org_alpha', role: 'admin' };
+      const token = cryptoService.signJwt(payload, secret, 3600);
+      expect(token.split('.')).toHaveLength(3);
+
+      const verified = cryptoService.verifyJwt(token, secret);
+      expect(verified.userId).toBe('user_1');
+      expect(verified.organizationId).toBe('org_alpha');
+      expect(verified.role).toBe('admin');
+    });
+
+    it('should reject token with invalid signature / wrong secret', () => {
+      const payload = { userId: 'user_1', organizationId: 'org_alpha' };
+      const token = cryptoService.signJwt(payload, secret, 3600);
+      expect(() => cryptoService.verifyJwt(token, 'wrong_secret')).toThrow('Invalid token signature');
+    });
+
+    it('should reject expired tokens', () => {
+      const payload = { userId: 'user_1', organizationId: 'org_alpha' };
+      // Expired 10 seconds ago
+      const token = cryptoService.signJwt(payload, secret, -10);
+      expect(() => cryptoService.verifyJwt(token, secret)).toThrow('Token has expired');
+    });
+
+    it('should reject tampered payload', () => {
+      const payload = { userId: 'user_1', organizationId: 'org_alpha' };
+      const token = cryptoService.signJwt(payload, secret, 3600);
+      const [header, , sig] = token.split('.');
+      const tamperedPayloadB64 = cryptoService.base64UrlEncode(
+        JSON.stringify({ userId: 'hacker', organizationId: 'org_beta', exp: Math.floor(Date.now() / 1000) + 3600 }),
+      );
+      const tamperedToken = `${header}.${tamperedPayloadB64}.${sig}`;
+      expect(() => cryptoService.verifyJwt(tamperedToken, secret)).toThrow('Invalid token signature');
+    });
+  });
 });
+

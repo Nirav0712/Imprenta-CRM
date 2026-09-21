@@ -7,7 +7,6 @@ import {
   Body,
   Param,
   Query,
-  Headers,
   Res,
   Header,
 } from '@nestjs/common';
@@ -16,18 +15,14 @@ import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { FilterContactsDto } from './dto/filter-contacts.dto';
+import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
 
 @Controller('api/contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
-  private resolveOrgId(headerOrgId?: string, queryOrgId?: string): string {
-    return headerOrgId || queryOrgId || 'default-org';
-  }
-
   @Get('stats')
-  async getStats(@Headers('x-organization-id') orgHeader?: string, @Query('organizationId') orgQuery?: string) {
-    const orgId = this.resolveOrgId(orgHeader, orgQuery);
+  async getStats(@CurrentTenant() orgId: string) {
     return this.contactsService.getStats(orgId);
   }
 
@@ -35,10 +30,9 @@ export class ContactsController {
   @Header('Content-Type', 'text/csv; charset=utf-8')
   async exportCsv(
     @Query() query: FilterContactsDto,
-    @Headers('x-organization-id') orgHeader?: string,
+    @CurrentTenant() orgId: string,
     @Res() res?: Response,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, query.organizationId);
     const csvData = await this.contactsService.exportCsv(query, orgId);
     const filename = `contacts_export_${new Date().toISOString().split('T')[0]}.csv`;
 
@@ -53,28 +47,24 @@ export class ContactsController {
   @Get()
   async findAll(
     @Query() query: FilterContactsDto,
-    @Headers('x-organization-id') orgHeader?: string,
+    @CurrentTenant() orgId: string,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, query.organizationId);
     return this.contactsService.findAll(query, orgId);
   }
 
   @Get(':id')
   async findById(
     @Param('id') id: string,
-    @Headers('x-organization-id') orgHeader?: string,
-    @Query('organizationId') orgQuery?: string,
+    @CurrentTenant() orgId: string,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, orgQuery);
     return this.contactsService.findById(id, orgId);
   }
 
   @Post()
   async create(
     @Body() dto: CreateContactDto,
-    @Headers('x-organization-id') orgHeader?: string,
+    @CurrentTenant() orgId: string,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, dto.organizationId);
     return this.contactsService.create(dto, orgId);
   }
 
@@ -82,29 +72,24 @@ export class ContactsController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateContactDto,
-    @Headers('x-organization-id') orgHeader?: string,
+    @CurrentTenant() orgId: string,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, dto.organizationId);
     return this.contactsService.update(id, dto, orgId);
   }
 
   @Delete('bulk')
   async deleteMany(
     @Body('ids') ids: string[],
-    @Headers('x-organization-id') orgHeader?: string,
-    @Query('organizationId') orgQuery?: string,
+    @CurrentTenant() orgId: string,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, orgQuery);
     return this.contactsService.deleteMany(ids || [], orgId);
   }
 
   @Delete(':id')
   async delete(
     @Param('id') id: string,
-    @Headers('x-organization-id') orgHeader?: string,
-    @Query('organizationId') orgQuery?: string,
+    @CurrentTenant() orgId: string,
   ) {
-    const orgId = this.resolveOrgId(orgHeader, orgQuery);
     await this.contactsService.delete(id, orgId);
     return { success: true, message: 'Contact deleted successfully' };
   }

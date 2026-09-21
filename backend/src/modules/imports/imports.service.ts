@@ -216,7 +216,7 @@ export class ImportsService {
   /**
    * Executes import and commits records to MongoDB Atlas
    */
-  async executeImport(dto: ExecuteImportDto): Promise<ImportJob> {
+  async executeImport(dto: ExecuteImportDto, orgId = 'default-org'): Promise<ImportJob> {
     const { filename, fileFormat, columnMapping, newCustomFields = [], rows } = dto;
 
     // 1. Create newly declared custom fields if any
@@ -235,6 +235,7 @@ export class ImportsService {
     // 2. Initialize ImportJob record
     const importJob = new this.importJobModel({
       filename,
+      organizationId: orgId,
       fileFormat,
       totalRows: rows.length,
       successfulRows: 0,
@@ -259,7 +260,7 @@ export class ImportsService {
       const rowNum = index + 1;
 
       try {
-        const contactData: Record<string, any> = { customFields: {} };
+        const contactData: Record<string, any> = { customFields: {}, organizationId: orgId };
 
         for (const [header, targetField] of Object.entries(columnMapping)) {
           if (!targetField || targetField === '__ignore__') continue;
@@ -291,10 +292,14 @@ export class ImportsService {
           continue;
         }
 
-        await this.contactsService.create(contactData as any, {
-          type: 'import',
-          importJobId: importJob._id as any,
-        });
+        await this.contactsService.create(
+          contactData as any,
+          orgId,
+          {
+            type: 'import',
+            importJobId: importJob._id as any,
+          },
+        );
 
         successfulRows++;
       } catch (rowErr) {
@@ -312,30 +317,30 @@ export class ImportsService {
     return importJob.save();
   }
 
-  async getImportHistory(): Promise<ImportJob[]> {
-    return this.importJobModel.find().sort({ createdAt: -1 }).limit(50).exec();
+  async getImportHistory(orgId = 'default-org'): Promise<ImportJob[]> {
+    return this.importJobModel.find({ organizationId: orgId }).sort({ createdAt: -1 }).limit(50).exec();
   }
 
-  async getImportJobById(id: string): Promise<ImportJob | null> {
-    return this.importJobModel.findById(id).exec();
+  async getImportJobById(id: string, orgId = 'default-org'): Promise<ImportJob | null> {
+    return this.importJobModel.findOne({ _id: id, organizationId: orgId }).exec();
   }
 
   // Reusable Mapping Presets
-  async getSavedMappings(): Promise<ImportMapping[]> {
-    return this.importMappingModel.find().sort({ name: 1 }).exec();
+  async getSavedMappings(orgId = 'default-org'): Promise<ImportMapping[]> {
+    return this.importMappingModel.find({ organizationId: orgId }).sort({ name: 1 }).exec();
   }
 
-  async saveMapping(name: string, mapping: Record<string, string>): Promise<ImportMapping> {
-    const existing = await this.importMappingModel.findOne({ name });
+  async saveMapping(name: string, mapping: Record<string, string>, orgId = 'default-org'): Promise<ImportMapping> {
+    const existing = await this.importMappingModel.findOne({ name, organizationId: orgId });
     if (existing) {
       existing.mapping = mapping;
       return existing.save();
     }
-    const created = new this.importMappingModel({ name, mapping });
+    const created = new this.importMappingModel({ name, mapping, organizationId: orgId });
     return created.save();
   }
 
-  async deleteMapping(id: string): Promise<void> {
-    await this.importMappingModel.findByIdAndDelete(id).exec();
+  async deleteMapping(id: string, orgId = 'default-org'): Promise<void> {
+    await this.importMappingModel.findOneAndDelete({ _id: id, organizationId: orgId }).exec();
   }
 }

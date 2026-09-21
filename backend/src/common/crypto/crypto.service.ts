@@ -83,4 +83,92 @@ export class CryptoService {
       return false;
     }
   }
+
+  /**
+   * Encodes a string or buffer into Base64URL (RFC 7515 / RFC 7519)
+   */
+  base64UrlEncode(input: Buffer | string): string {
+    const buf = Buffer.isBuffer(input) ? input : Buffer.from(input, 'utf8');
+    return buf.toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  }
+
+  /**
+   * Decodes a Base64URL string
+   */
+  base64UrlDecode(input: string): string {
+    let base64 = input.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4) {
+      base64 += '=';
+    }
+    return Buffer.from(base64, 'base64').toString('utf8');
+  }
+
+  /**
+   * Signs a JWT using HS256 algorithm
+   */
+  signJwt(payload: Record<string, any>, secret: string, expiresInSec = 86400): string {
+    const header = { alg: 'HS256', typ: 'JWT' };
+    const now = Math.floor(Date.now() / 1000);
+    const fullPayload = {
+      ...payload,
+      iat: now,
+      exp: now + expiresInSec,
+    };
+
+    const headerB64 = this.base64UrlEncode(JSON.stringify(header));
+    const payloadB64 = this.base64UrlEncode(JSON.stringify(fullPayload));
+    const signingInput = `${headerB64}.${payloadB64}`;
+
+    const signature = crypto.createHmac('sha256', secret).update(signingInput).digest();
+    const signatureB64 = this.base64UrlEncode(signature);
+
+    return `${signingInput}.${signatureB64}`;
+  }
+
+  /**
+   * Cryptographically verifies an HS256 JWT signature and validates expiration / nbf
+   */
+  verifyJwt(token: string, secret: string): Record<string, any> {
+    if (!token || typeof token !== 'string') {
+      throw new Error('Missing token');
+    }
+
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      throw new Error('Malformed JWT token structure');
+    }
+
+    const [headerB64, payloadB64, signatureB64] = parts;
+    const signingInput = `${headerB64}.${payloadB64}`;
+
+    const expectedSignature = crypto.createHmac('sha256', secret).update(signingInput).digest();
+    const expectedSignatureB64 = this.base64UrlEncode(expectedSignature);
+
+    // Timing-safe comparison of signature
+    const sigA = Buffer.from(signatureB64);
+    const sigB = Buffer.from(expectedSignatureB64);
+
+    if (sigA.length !== sigB.length || !crypto.timingSafeEqual(sigA, sigB)) {
+      throw new Error('Invalid token signature');
+    }
+
+    let payload: Record<string, any>;
+    try {
+      payload = JSON.parse(this.base64UrlDecode(payloadB64));
+    } catch {
+      throw new Error('Invalid token payload encoding');
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+
+    if (payload.exp && typeof payload.exp === 'number' && now > payload.exp) {
+      throw new Error('Token has expired');
+    }
+
+    if (payload.nbf && typeof payload.nbf === 'number' && now < payload.nbf) {
+      throw new Error('Token is not active yet');
+    }
+
+    return payload;
+  }
 }

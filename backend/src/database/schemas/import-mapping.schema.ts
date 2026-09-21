@@ -5,6 +5,9 @@ export type ImportMappingDocument = ImportMapping & Document;
 
 @Schema({ timestamps: true, collection: 'import_mappings' })
 export class ImportMapping {
+  @Prop({ trim: true, default: 'default-org', index: true })
+  organizationId: string;
+
   @Prop({ required: true, trim: true })
   name: string;
 
@@ -13,3 +16,4 @@ export class ImportMapping {
 }
 
 export const ImportMappingSchema = SchemaFactory.createForClass(ImportMapping);
+ImportMappingSchema.index({ organizationId: 1, name: 1 });

@@ -10,6 +10,9 @@ export class Lead {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Contact', required: true, index: true })
   contactId: Types.ObjectId;
 
+  @Prop({ trim: true, default: 'default-org', index: true })
+  organizationId: string;
+
   @Prop({ required: true, trim: true })
   title: string;
 
@@ -50,4 +53,6 @@ export class Lead {
 }
 
 export const LeadSchema = SchemaFactory.createForClass(Lead);
+LeadSchema.index({ organizationId: 1, stage: 1 });
+LeadSchema.index({ organizationId: 1, createdAt: -1 });
 LeadSchema.index({ stage: 1, dealValue: -1 });

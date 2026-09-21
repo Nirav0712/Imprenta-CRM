@@ -66,8 +66,8 @@ export class CrmService {
 
   // ================= LEAD & PIPELINE MANAGEMENT =================
 
-  async getLeads(stage?: string, search?: string) {
-    const query: any = {};
+  async getLeads(orgId = 'default-org', stage?: string, search?: string) {
+    const query: any = { organizationId: orgId };
     if (stage && stage !== 'all') {
       query.stage = stage;
     }
@@ -86,10 +86,10 @@ export class CrmService {
       .exec();
   }
 
-  async getPipelineSummary() {
+  async getPipelineSummary(orgId = 'default-org') {
     const stages: PipelineStage[] = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost'];
     const leads = await this.leadModel
-      .find()
+      .find({ organizationId: orgId })
       .populate('contactId', 'fullName email phoneNumber company')
       .sort({ updatedAt: -1 })
       .exec();
@@ -122,18 +122,19 @@ export class CrmService {
     };
   }
 
-  async createLead(dto: CreateLeadDto): Promise<LeadDocument> {
+  async createLead(dto: CreateLeadDto, orgId = 'default-org'): Promise<LeadDocument> {
     if (!dto.contactId || !dto.title) {
       throw new BadRequestException('Contact ID and Lead Title are required');
     }
 
-    const contact = await this.contactModel.findById(dto.contactId);
+    const contact = await this.contactModel.findOne({ _id: dto.contactId, organizationId: orgId });
     if (!contact) {
-      throw new NotFoundException(`Contact #${dto.contactId} not found`);
+      throw new NotFoundException(`Contact #${dto.contactId} not found in this organization`);
     }
 
     const lead = new this.leadModel({
       contactId: new Types.ObjectId(dto.contactId),
+      organizationId: orgId,
       title: dto.title.trim(),
       stage: dto.stage || 'new',
       dealValue: dto.dealValue || 0,
@@ -150,21 +151,24 @@ export class CrmService {
     const saved = await lead.save();
 
     // Log Activity
-    await this.createActivity({
-      contactId: dto.contactId,
-      leadId: String(saved._id),
-      type: 'deal_update',
-      title: `New Lead Created: ${dto.title}`,
-      description: `Stage: ${saved.stage}, Value: $${saved.dealValue}`,
-    });
+    await this.createActivity(
+      {
+        contactId: dto.contactId,
+        leadId: String(saved._id),
+        type: 'deal_update',
+        title: `New Lead Created: ${dto.title}`,
+        description: `Stage: ${saved.stage}, Value: $${saved.dealValue}`,
+      },
+      orgId,
+    );
 
     return this.leadModel.findById(saved._id).populate('contactId').exec() as any;
   }
 
-  async updateLead(id: string, dto: UpdateLeadDto): Promise<LeadDocument> {
-    const lead = await this.leadModel.findById(id);
+  async updateLead(id: string, dto: UpdateLeadDto, orgId = 'default-org'): Promise<LeadDocument> {
+    const lead = await this.leadModel.findOne({ _id: id, organizationId: orgId });
     if (!lead) {
-      throw new NotFoundException(`Lead #${id} not found`);
+      throw new NotFoundException(`Lead #${id} not found in this organization`);
     }
 
     const oldStage = lead.stage;
@@ -175,33 +179,36 @@ export class CrmService {
     const updated = await lead.save();
 
     if (dto.stage && dto.stage !== oldStage) {
-      await this.createActivity({
-        contactId: String(lead.contactId),
-        leadId: id,
-        type: 'deal_update',
-        title: `Stage Changed to ${dto.stage.toUpperCase()}`,
-        description: `Lead moved from ${oldStage} to ${dto.stage}`,
-      });
+      await this.createActivity(
+        {
+          contactId: String(lead.contactId),
+          leadId: id,
+          type: 'deal_update',
+          title: `Stage Changed to ${dto.stage.toUpperCase()}`,
+          description: `Lead moved from ${oldStage} to ${dto.stage}`,
+        },
+        orgId,
+      );
     }
 
     return this.leadModel.findById(updated._id).populate('contactId').exec() as any;
   }
 
-  async deleteLead(id: string) {
-    const lead = await this.leadModel.findById(id);
+  async deleteLead(id: string, orgId = 'default-org') {
+    const lead = await this.leadModel.findOne({ _id: id, organizationId: orgId });
     if (!lead) {
-      throw new NotFoundException(`Lead #${id} not found`);
+      throw new NotFoundException(`Lead #${id} not found in this organization`);
     }
     await this.leadModel.findByIdAndDelete(id);
-    await this.activityModel.deleteMany({ leadId: new Types.ObjectId(id) });
-    await this.followUpModel.deleteMany({ leadId: new Types.ObjectId(id) });
+    await this.activityModel.deleteMany({ leadId: new Types.ObjectId(id), organizationId: orgId });
+    await this.followUpModel.deleteMany({ leadId: new Types.ObjectId(id), organizationId: orgId });
     return { success: true, message: `Lead #${id} deleted` };
   }
 
   // ================= ACTIVITIES TIMELINE =================
 
-  async getActivities(contactId?: string, leadId?: string, limit = 50) {
-    const query: any = {};
+  async getActivities(orgId = 'default-org', contactId?: string, leadId?: string, limit = 50) {
+    const query: any = { organizationId: orgId };
     if (contactId) {
       query.contactId = new Types.ObjectId(contactId);
     }
@@ -218,9 +225,10 @@ export class CrmService {
       .exec();
   }
 
-  async createActivity(dto: CreateActivityDto): Promise<ActivityDocument> {
+  async createActivity(dto: CreateActivityDto, orgId = 'default-org'): Promise<ActivityDocument> {
     const activity = new this.activityModel({
       contactId: new Types.ObjectId(dto.contactId),
+      organizationId: orgId,
       leadId: dto.leadId ? new Types.ObjectId(dto.leadId) : undefined,
       type: dto.type,
       title: dto.title,
@@ -234,8 +242,8 @@ export class CrmService {
 
   // ================= FOLLOW-UPS =================
 
-  async getFollowUps(status?: string) {
-    const query: any = {};
+  async getFollowUps(orgId = 'default-org', status?: string) {
+    const query: any = { organizationId: orgId };
     if (status && status !== 'all') {
       query.status = status;
     }
@@ -248,13 +256,19 @@ export class CrmService {
       .exec();
   }
 
-  async createFollowUp(dto: CreateFollowUpDto): Promise<FollowUpDocument> {
+  async createFollowUp(dto: CreateFollowUpDto, orgId = 'default-org'): Promise<FollowUpDocument> {
     if (!dto.contactId || !dto.title || !dto.dueDate) {
       throw new BadRequestException('Contact, title, and due date are required');
     }
 
+    const contact = await this.contactModel.findOne({ _id: dto.contactId, organizationId: orgId });
+    if (!contact) {
+      throw new NotFoundException(`Contact #${dto.contactId} not found in this organization`);
+    }
+
     const followUp = new this.followUpModel({
       contactId: new Types.ObjectId(dto.contactId),
+      organizationId: orgId,
       leadId: dto.leadId ? new Types.ObjectId(dto.leadId) : undefined,
       title: dto.title.trim(),
       notes: dto.notes,
@@ -266,21 +280,24 @@ export class CrmService {
 
     const saved = await followUp.save();
 
-    await this.createActivity({
-      contactId: dto.contactId,
-      leadId: dto.leadId,
-      type: 'note',
-      title: `Follow-up Scheduled: ${dto.title}`,
-      description: `Due: ${new Date(dto.dueDate).toLocaleDateString()}`,
-    });
+    await this.createActivity(
+      {
+        contactId: dto.contactId,
+        leadId: dto.leadId,
+        type: 'note',
+        title: `Follow-up Scheduled: ${dto.title}`,
+        description: `Due: ${new Date(dto.dueDate).toLocaleDateString()}`,
+      },
+      orgId,
+    );
 
     return this.followUpModel.findById(saved._id).populate('contactId').populate('leadId').exec() as any;
   }
 
-  async updateFollowUp(id: string, dto: UpdateFollowUpDto): Promise<FollowUpDocument> {
-    const followUp = await this.followUpModel.findById(id);
+  async updateFollowUp(id: string, dto: UpdateFollowUpDto, orgId = 'default-org'): Promise<FollowUpDocument> {
+    const followUp = await this.followUpModel.findOne({ _id: id, organizationId: orgId });
     if (!followUp) {
-      throw new NotFoundException(`Follow-up #${id} not found`);
+      throw new NotFoundException(`Follow-up #${id} not found in this organization`);
     }
 
     if (dto.status === 'completed' && followUp.status !== 'completed') {
@@ -296,10 +313,10 @@ export class CrmService {
     return this.followUpModel.findById(updated._id).populate('contactId').populate('leadId').exec() as any;
   }
 
-  async deleteFollowUp(id: string) {
-    const followUp = await this.followUpModel.findById(id);
+  async deleteFollowUp(id: string, orgId = 'default-org') {
+    const followUp = await this.followUpModel.findOne({ _id: id, organizationId: orgId });
     if (!followUp) {
-      throw new NotFoundException(`Follow-up #${id} not found`);
+      throw new NotFoundException(`Follow-up #${id} not found in this organization`);
     }
     await this.followUpModel.findByIdAndDelete(id);
     return { success: true, message: `Follow-up #${id} deleted` };
@@ -307,8 +324,8 @@ export class CrmService {
 
   // ================= LEAD SOURCES & ANALYTICS =================
 
-  async getLeadSources() {
-    const leads = await this.leadModel.find().exec();
+  async getLeadSources(orgId = 'default-org') {
+    const leads = await this.leadModel.find({ organizationId: orgId }).exec();
     const sourceMap: Record<string, { count: number; totalValue: number; wonCount: number }> = {};
 
     for (const lead of leads) {

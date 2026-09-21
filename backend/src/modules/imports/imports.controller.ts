@@ -12,6 +12,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImportsService } from './imports.service';
 import { ExecuteImportDto, PreviewImportDto } from './dto/execute-import.dto';
+import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
 
 @Controller('api/imports')
 export class ImportsController {
@@ -44,37 +45,50 @@ export class ImportsController {
   }
 
   @Post('execute')
-  async executeImport(@Body() dto: ExecuteImportDto) {
-    return this.importsService.executeImport(dto);
+  async executeImport(
+    @CurrentTenant() orgId: string,
+    @Body() dto: ExecuteImportDto,
+  ) {
+    return this.importsService.executeImport(dto, orgId);
   }
 
   @Get('history')
-  async getHistory() {
-    return this.importsService.getImportHistory();
+  async getHistory(@CurrentTenant() orgId: string) {
+    return this.importsService.getImportHistory(orgId);
   }
 
   @Get('history/:id')
-  async getJobById(@Param('id') id: string) {
-    return this.importsService.getImportJobById(id);
+  async getJobById(
+    @Param('id') id: string,
+    @CurrentTenant() orgId: string,
+  ) {
+    return this.importsService.getImportJobById(id, orgId);
   }
 
   // Reusable Mapping Presets
   @Get('mappings')
-  async getSavedMappings() {
-    return this.importsService.getSavedMappings();
+  async getSavedMappings(@CurrentTenant() orgId: string) {
+    return this.importsService.getSavedMappings(orgId);
   }
 
   @Post('mappings')
-  async saveMapping(@Body('name') name: string, @Body('mapping') mapping: Record<string, string>) {
+  async saveMapping(
+    @CurrentTenant() orgId: string,
+    @Body('name') name: string,
+    @Body('mapping') mapping: Record<string, string>,
+  ) {
     if (!name || !mapping) {
       throw new BadRequestException('Preset name and mapping are required');
     }
-    return this.importsService.saveMapping(name, mapping);
+    return this.importsService.saveMapping(name, mapping, orgId);
   }
 
   @Delete('mappings/:id')
-  async deleteMapping(@Param('id') id: string) {
-    await this.importsService.deleteMapping(id);
+  async deleteMapping(
+    @Param('id') id: string,
+    @CurrentTenant() orgId: string,
+  ) {
+    await this.importsService.deleteMapping(id, orgId);
     return { success: true, message: 'Mapping preset deleted successfully' };
   }
 }
