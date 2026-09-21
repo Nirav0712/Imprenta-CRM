@@ -21,6 +21,7 @@ import { QueueJob, QueueJobSchema } from './schemas/queue-job.schema';
 import { Lead, LeadSchema } from './schemas/lead.schema';
 import { Activity, ActivitySchema } from './schemas/activity.schema';
 import { FollowUp, FollowUpSchema } from './schemas/follow-up.schema';
+import { User, UserSchema } from './schemas/user.schema';
 
 const MODELS = [
   { name: Contact.name, schema: ContactSchema },
@@ -43,6 +44,7 @@ const MODELS = [
   { name: Lead.name, schema: LeadSchema },
   { name: Activity.name, schema: ActivitySchema },
   { name: FollowUp.name, schema: FollowUpSchema },
+  { name: User.name, schema: UserSchema },
 ];
 
 const logger = new Logger('DatabaseModule');

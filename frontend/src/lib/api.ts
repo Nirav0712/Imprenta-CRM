@@ -10,6 +10,45 @@ export const api = axios.create({
   timeout: 30000,
 });
 
+// Automatically attach authentication credentials from localStorage if present
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('jwt_token') || localStorage.getItem('token');
+    if (token && !config.headers.Authorization) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    const apiKey = localStorage.getItem('api_key') || localStorage.getItem('x-api-key');
+    if (apiKey && !config.headers['x-api-key']) {
+      config.headers['x-api-key'] = apiKey;
+    }
+    const orgId = localStorage.getItem('organization_id') || localStorage.getItem('x-organization-id');
+    if (orgId && !config.headers['x-organization-id']) {
+      config.headers['x-organization-id'] = orgId;
+    }
+  }
+  return config;
+});
+
+// Automatic 401 handling - redirect to login
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('token');
+        delete api.defaults.headers.common['Authorization'];
+        if (window.location.pathname !== '/login') {
+          const currentPath = window.location.pathname + window.location.search;
+          window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Response error handler helper
 export function extractErrorMessage(err: any): string {
   if (err.response?.data?.message) {
@@ -19,20 +58,42 @@ export function extractErrorMessage(err: any): string {
   return err.message || 'An unexpected error occurred';
 }
 
+// Auth API
+export const authApi = {
+  login: (data: { email: string; password: string }) =>
+    api.post('/auth/login', data).then((r) => r.data),
+  getMe: () => api.get('/auth/me').then((r) => r.data),
+};
+
 // Authentication & Token support
 export function setAuthToken(token: string | null) {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', token);
+    }
   } else {
     delete api.defaults.headers.common['Authorization'];
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('jwt_token');
+      localStorage.removeItem('token');
+    }
   }
 }
 
 export function setApiKey(apiKey: string | null) {
   if (apiKey) {
     api.defaults.headers.common['x-api-key'] = apiKey;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('api_key', apiKey);
+    }
   } else {
     delete api.defaults.headers.common['x-api-key'];
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('api_key');
+      localStorage.removeItem('x-api-key');
+    }
   }
 }
 
@@ -41,6 +102,9 @@ let currentOrganizationId = 'default-org';
 export function setTenantOrganizationId(orgId: string) {
   currentOrganizationId = orgId || 'default-org';
   api.defaults.headers.common['x-organization-id'] = currentOrganizationId;
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('organization_id', currentOrganizationId);
+  }
 }
 
 // Contacts API

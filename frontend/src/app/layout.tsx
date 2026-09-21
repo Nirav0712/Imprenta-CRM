@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '../context/ThemeContext';
-import { Sidebar } from '../components/layout/Sidebar';
-import { Navbar } from '../components/layout/Navbar';
+import { AppShell } from '../components/layout/AppShell';
 
 export const metadata: Metadata = {
   title: 'AutoMarket — Marketing Automation OS',
@@ -26,15 +25,7 @@ export default function RootLayout({
       </head>
       <body className="h-full font-sans antialiased overflow-hidden">
         <ThemeProvider>
-          <div className="flex h-full w-full">
-            <Sidebar />
-            <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-              <Navbar />
-              <main className="flex-1 overflow-y-auto p-6 flex flex-col min-h-0">
-                <div className="max-w-7xl w-full mx-auto flex-1 flex flex-col min-h-0">{children}</div>
-              </main>
-            </div>
-          </div>
+          <AppShell>{children}</AppShell>
         </ThemeProvider>
       </body>
     </html>

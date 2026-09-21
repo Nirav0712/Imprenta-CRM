@@ -13,6 +13,7 @@ import { CampaignsModule } from './modules/campaigns/campaigns.module';
 import { SendingModule } from './modules/sending/sending.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { CrmModule } from './modules/crm/crm.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { AppController } from './app.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { TenantAuthGuard } from './common/guards/tenant-auth.guard';
@@ -26,6 +27,7 @@ import { TenantAuthGuard } from './common/guards/tenant-auth.guard';
     }),
     CryptoModule,
     DatabaseModule,
+    AuthModule,
     ContactsModule,
     CustomFieldsModule,
     ImportsModule,

@@ -10,11 +10,15 @@ import {
   FileSpreadsheet,
   Search,
   ShieldCheck,
+  Building,
+  LogOut,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 
 export function Navbar() {
   const { theme, setMode } = useTheme();
+  const { organizationId, user, logout } = useAuth();
 
   return (
     <header
@@ -34,6 +38,10 @@ export function Navbar() {
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800">
             <ShieldCheck className="w-3.5 h-3.5" />
             Automation OS
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+            <Building className="w-3.5 h-3.5 text-slate-400" />
+            {organizationId || 'default-org'}
           </span>
         </div>
 
@@ -101,6 +109,15 @@ export function Navbar() {
           <Plus className="w-3.5 h-3.5" />
           New Campaign
         </Link>
+
+        {/* Logout Button */}
+        <button
+          onClick={logout}
+          title="Sign Out"
+          className="p-1.5 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-500/10 transition-colors border border-slate-200 dark:border-slate-700"
+        >
+          <LogOut className="w-4 h-4" />
+        </button>
       </div>
     </header>
   );
