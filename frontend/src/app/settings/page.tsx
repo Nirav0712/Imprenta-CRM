@@ -509,12 +509,13 @@ export default function SettingsPage() {
 
           <div className="flex items-center gap-2 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
             <code className="text-xs font-mono text-emerald-700 dark:text-emerald-400 flex-1 truncate">
-              http://localhost:4000/api/whatsapp/webhook
+              {`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/whatsapp/webhook`}
             </code>
             <button
               type="button"
               onClick={() => {
-                navigator.clipboard.writeText('http://localhost:4000/api/whatsapp/webhook');
+                const webhookUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/whatsapp/webhook`;
+                navigator.clipboard.writeText(webhookUrl);
                 setCopiedWebhook(true);
                 setTimeout(() => setCopiedWebhook(false), 2000);
               }}

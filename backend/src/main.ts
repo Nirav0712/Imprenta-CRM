@@ -33,25 +33,11 @@ async function isPortOpen(port: number, host = '127.0.0.1'): Promise<boolean> {
 async function ensureLocalDatabase() {
   const currentUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/automarket';
 
-  // If MongoDB is an Atlas cluster (mongodb+srv://) or custom remote host, probe connectivity
-  if (!currentUri.includes('127.0.0.1') && !currentUri.includes('localhost')) {
+  // If running in production or connecting to MongoDB Atlas, use directly
+  if (process.env.NODE_ENV === 'production' || currentUri.includes('mongodb+srv://') || (!currentUri.includes('127.0.0.1') && !currentUri.includes('localhost'))) {
     const sanitized = currentUri.replace(/\/\/.*@/, '//<auth>@');
-    Logger.log(`Probing MongoDB Atlas cluster: ${sanitized}...`, 'Bootstrap');
-    try {
-      const mongoose = await import('mongoose');
-      const testConn = await mongoose.connect(currentUri, {
-        serverSelectionTimeoutMS: 3500,
-        connectTimeoutMS: 3500,
-      });
-      await testConn.disconnect();
-      Logger.log(`Successfully reached MongoDB Atlas cluster! Connecting backend...`, 'Bootstrap');
-      return;
-    } catch (err: any) {
-      Logger.warn(
-        `MongoDB Atlas connection blocked by IP whitelist or network: ${err.message}. To connect directly to Atlas, add your IP (171.61.160.172) or 0.0.0.0/0 to Atlas Network Access. Initializing local database fallback for now.`,
-        'Bootstrap',
-      );
-    }
+    Logger.log(`Using production MongoDB Atlas connection: ${sanitized}`, 'Bootstrap');
+    return;
   }
 
   // Check if an external MongoDB daemon is already running on port 27017
@@ -62,7 +48,7 @@ async function ensureLocalDatabase() {
     return;
   }
 
-  // Launch embedded high-performance MongoDB Server
+  // Launch embedded MongoDB Server for local offline development only
   try {
     const { MongoMemoryServer } = await import('mongodb-memory-server');
     const mongod = await MongoMemoryServer.create({
@@ -75,7 +61,7 @@ async function ensureLocalDatabase() {
     const activeUri = mongod.getUri() + 'automarket';
     process.env.MONGODB_URI = activeUri;
 
-    Logger.log(`Local MongoDB database engine started at: ${activeUri}`, 'Bootstrap');
+    Logger.log(`Local development MongoDB database engine started at: ${activeUri}`, 'Bootstrap');
   } catch (err: any) {
     Logger.error(`Failed to launch database runner: ${err.message}`, 'Bootstrap');
   }
@@ -91,10 +77,47 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
 
-  // Enable CORS
+  // Enable Production-safe CORS with exact origin allowlist
+  const frontendUrl = process.env.FRONTEND_URL;
+  const allowedOriginsEnv = process.env.ALLOWED_ORIGINS;
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const allowedOrigins = new Set<string>();
+  if (frontendUrl) {
+    allowedOrigins.add(frontendUrl.replace(/\/$/, '').toLowerCase());
+  }
+  if (allowedOriginsEnv) {
+    allowedOriginsEnv.split(',').forEach((url) => {
+      const trimmed = url.trim().replace(/\/$/, '').toLowerCase();
+      if (trimmed) allowedOrigins.add(trimmed);
+    });
+  }
+
   app.enableCors({
-    origin: '*',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server, webhooks)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const normalizedOrigin = origin.replace(/\/$/, '').toLowerCase();
+
+      // Check explicit allowlist
+      if (allowedOrigins.has(normalizedOrigin)) {
+        return callback(null, true);
+      }
+
+      // In development, allow localhost / loopback
+      if (!isProd && (/^http:\/\/localhost(:\d+)?$/.test(origin) || /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin))) {
+        return callback(null, true);
+      }
+
+      // In production or if origin is unapproved, reject by omitting CORS headers
+      return callback(null, false);
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type,Authorization,x-organization-id,Accept,Origin,X-Requested-With',
+    exposedHeaders: 'Content-Disposition',
     credentials: true,
   });
 
@@ -114,9 +137,11 @@ async function bootstrap() {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-  const port = configService.get<number>('port') || 4000;
-  await app.listen(port);
-  logger.log(`AutoMarket CRM Backend running on http://localhost:${port}`);
+  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : (configService.get<number>('port') || 4000);
+  const host = '0.0.0.0';
+  await app.listen(port, host);
+  logger.log(`AutoMarket CRM Backend running on http://${host}:${port}`);
 }
 
 bootstrap();
+

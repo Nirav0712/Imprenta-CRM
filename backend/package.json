@@ -1,7 +1,10 @@
 {
   "name": "marketing-automation-backend",
   "version": "1.0.0",
-  "description": "Production-ready Marketing Automation Software Backend",
+  "engines": {
+    "node": ">=20.0.0 <21.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "build": "nest build",
     "start": "nest start",
