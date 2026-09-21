@@ -51,6 +51,9 @@ api.interceptors.response.use(
 
 // Response error handler helper
 export function extractErrorMessage(err: any): string {
+  if (err.response?.status === 404 && err.config?.url?.includes('/auth/login')) {
+    return 'Backend authentication service is deploying on Hostinger. Please allow 1-2 minutes for the Hostinger build to complete, then try again.';
+  }
   if (err.response?.data?.message) {
     const msg = err.response.data.message;
     return Array.isArray(msg) ? msg.join(', ') : msg;
