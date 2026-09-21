@@ -29,10 +29,29 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Automatic 401 handling - redirect to login
+// Automatic 401 handling & Network Error same-origin fallback
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    // If CORS or Network Error occurs on cross-origin request in browser, retry seamlessly via same-origin /api rewrite
+    if (
+      (error.message === 'Network Error' || error.code === 'ERR_NETWORK') &&
+      error.config &&
+      !error.config._retried &&
+      typeof window !== 'undefined'
+    ) {
+      error.config._retried = true;
+      const originalUrl = error.config.url || '';
+      const cleanPath = originalUrl.replace(/^https?:\/\/[^/]+\/api/, '').replace(/^\/api/, '');
+      error.config.baseURL = '/api';
+      error.config.url = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+      try {
+        return await axios.request(error.config);
+      } catch (retryErr) {
+        return Promise.reject(retryErr);
+      }
+    }
+
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token');

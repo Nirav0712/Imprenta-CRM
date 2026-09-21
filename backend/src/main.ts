@@ -107,6 +107,11 @@ async function bootstrap() {
         return callback(null, true);
       }
 
+      // Allow Vercel deployments (*.vercel.app)
+      if (/^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/.test(origin)) {
+        return callback(null, true);
+      }
+
       // In development, allow localhost / loopback
       if (!isProd && (/^http:\/\/localhost(:\d+)?$/.test(origin) || /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin))) {
         return callback(null, true);
