@@ -122,10 +122,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: { email: string; password: string }) => {
     setIsLoading(true);
     try {
-      const res = await authApi.login({
-        email: credentials.email.trim(),
-        password: credentials.password,
-      });
+      let res: any = null;
+      try {
+        res = await authApi.login({
+          email: credentials.email.trim(),
+          password: credentials.password,
+        });
+      } catch (primaryErr: any) {
+        // If the primary endpoint returned 404 (Hostinger deploy in progress), fallback to local auth endpoint
+        if (primaryErr.response?.status === 404) {
+          try {
+            const fallbackFetch = await fetch('http://localhost:4000/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: credentials.email.trim(), password: credentials.password }),
+            });
+            if (fallbackFetch.ok) {
+              res = await fallbackFetch.json();
+            } else {
+              const errData = await fallbackFetch.json().catch(() => ({}));
+              throw new Error(errData.message || 'Invalid email or password');
+            }
+          } catch (fallbackErr: any) {
+            throw new Error(fallbackErr.message || extractErrorMessage(primaryErr));
+          }
+        } else {
+          throw new Error(extractErrorMessage(primaryErr));
+        }
+      }
 
       if (res && res.accessToken) {
         const receivedToken = res.accessToken;
