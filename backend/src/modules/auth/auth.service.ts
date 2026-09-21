@@ -59,8 +59,8 @@ export class AuthService implements OnModuleInit {
     try {
       const count = await this.userModel.countDocuments();
       if (count === 0) {
-        const defaultEmail = (process.env.ADMIN_EMAIL || 'admin@automarket.internal').trim().toLowerCase();
-        const defaultPassword = process.env.ADMIN_PASSWORD || 'Admin@123456';
+        const defaultEmail = (process.env.ADMIN_EMAIL || 'admin@imprenta.com').trim().toLowerCase();
+        const defaultPassword = process.env.ADMIN_PASSWORD || 'admin123';
         const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
 
         const { hash, salt } = this.hashPassword(defaultPassword);
@@ -107,20 +107,18 @@ export class AuthService implements OnModuleInit {
 
     // Fallback: If DB had no user yet or connecting initially, verify against configured admin env
     if (!user) {
-      const adminEmail = (process.env.ADMIN_EMAIL || 'thedigitalconnect712@gmail.com').trim().toLowerCase();
-      const adminPassword = process.env.ADMIN_PASSWORD || '123456789';
+      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@imprenta.com').trim().toLowerCase();
+      const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
       const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
 
       const validAdminCredentials: Record<string, string> = {
         [adminEmail]: adminPassword,
-        'thedigitalconnect712@gmail.com': '123456789',
-        'admin@automarket.internal': 'Admin@123456',
-        'admin': 'Admin@123456',
-        'bdetdc5@gmail.com': 'Nirav@1010',
+        'admin@imprenta.com': 'admin123',
+        'admin': 'admin123',
       };
 
       const expectedPwd = validAdminCredentials[normalizedIdentifier];
-      if (expectedPwd && (password === expectedPwd || password === 'Admin@123456' || password === '123456789')) {
+      if (expectedPwd && password === expectedPwd) {
         const { hash, salt } = this.hashPassword(password);
         try {
           user = await this.userModel.create({
