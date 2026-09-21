@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://grey-falcon-988849.hostingersite.com/api';
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grey-falcon-988849.hostingersite.com/api';
+
+// In browser environments (both local & production Vercel), use same-origin '/api'
+// Next.js rewrites in next.config.mjs seamlessly proxy all '/api/:path*' calls to Hostinger.
+// This completely avoids CORS preflight failures and browser network errors.
+export const API_BASE = typeof window !== 'undefined' ? '/api' : BACKEND_URL;
 
 export const api = axios.create({
   baseURL: API_BASE,
@@ -29,11 +34,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Automatic 401 handling & Network Error same-origin fallback
+// Automatic 401 handling & Network Error cross-fallback
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // If CORS or Network Error occurs on cross-origin request in browser, retry seamlessly via same-origin /api rewrite
+    // If Network Error occurs in browser, retry seamlessly with alternate target
     if (
       (error.message === 'Network Error' || error.code === 'ERR_NETWORK') &&
       error.config &&
@@ -41,10 +46,12 @@ api.interceptors.response.use(
       typeof window !== 'undefined'
     ) {
       error.config._retried = true;
-      const originalUrl = error.config.url || '';
-      const cleanPath = originalUrl.replace(/^https?:\/\/[^/]+\/api/, '').replace(/^\/api/, '');
-      error.config.baseURL = '/api';
-      error.config.url = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+      const currentBase = error.config.baseURL || API_BASE;
+      if (currentBase === '/api' || currentBase.startsWith('/')) {
+        error.config.baseURL = BACKEND_URL;
+      } else {
+        error.config.baseURL = '/api';
+      }
       try {
         return await axios.request(error.config);
       } catch (retryErr) {
