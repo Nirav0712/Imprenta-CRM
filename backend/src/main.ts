@@ -1,23 +1,72 @@
 import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import * as express from 'express';
+import * as http from 'http';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
-  // Log sanitized database connection target without leaking credentials
-  const mongoUri = process.env.MONGODB_URI;
-  if (mongoUri) {
-    const sanitized = mongoUri.replace(/\/\/.*@/, '//<auth>@');
-    logger.log(`Target database URI configured: ${sanitized}`);
-  } else if (process.env.NODE_ENV === 'production') {
-    logger.warn('NOTICE: MONGODB_URI is not set. Please ensure MongoDB Atlas connection string is configured in environment variables.');
-  }
+  const port = parseInt(process.env.PORT || '4000', 10);
+  const host = '0.0.0.0';
+  const isProd = process.env.NODE_ENV === 'production';
+  const hasMongoUri = Boolean(process.env.MONGODB_URI);
 
-  const app = await NestFactory.create(AppModule, {
+  // Sanitized diagnostic startup logs (NO secrets or credentials exposed)
+  logger.log(`[Startup Diagnostics] PORT: ${port}`);
+  logger.log(`[Startup Diagnostics] HOST: ${host}`);
+  logger.log(`[Startup Diagnostics] NODE_ENV is production: ${isProd}`);
+  logger.log(`[Startup Diagnostics] MONGODB_URI configured: ${hasMongoUri}`);
+
+  // 1. Create native Express instance
+  const server = express();
+
+  // 2. Immediate HTTP Server binding for Hostinger 3-second listen SLA
+  logger.log(`[Startup] Initiating immediate HTTP socket bind on ${host}:${port}...`);
+  const httpServer = http.createServer(server);
+
+  await new Promise<void>((resolve, reject) => {
+    httpServer.listen(port, host, () => {
+      logger.log(`[Startup] HTTP socket successfully bound to http://${host}:${port} (PID: ${process.pid})`);
+      resolve();
+    });
+    httpServer.once('error', (err) => {
+      logger.error(`[Startup] Failed to bind HTTP socket on ${host}:${port}: ${err.message}`);
+      reject(err);
+    });
+  });
+
+  // 3. Early health probe responder while NestJS initializes in parallel
+  let isNestReady = false;
+  server.get('/health', (req, res, next) => {
+    if (!isNestReady) {
+      return res.status(200).json({
+        status: 'starting',
+        service: 'imprenta-crm-backend',
+        timestamp: new Date().toISOString(),
+        database: { status: 'initializing', databaseName: 'automarket' },
+      });
+    }
+    next();
+  });
+  server.get('/api/health', (req, res, next) => {
+    if (!isNestReady) {
+      return res.status(200).json({
+        status: 'starting',
+        service: 'imprenta-crm-backend',
+        timestamp: new Date().toISOString(),
+        database: { status: 'initializing', databaseName: 'automarket' },
+      });
+    }
+    next();
+  });
+
+  // 4. Initialize NestJS application on top of the already-listening Express instance
+  logger.log(`[Startup] Initializing NestJS application and modules...`);
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server), {
     rawBody: true,
   });
 
@@ -26,7 +75,6 @@ async function bootstrap() {
   // Enable Production-safe CORS with exact origin allowlist
   const frontendUrl = process.env.FRONTEND_URL;
   const allowedOriginsEnv = process.env.ALLOWED_ORIGINS;
-  const isProd = process.env.NODE_ENV === 'production';
 
   const allowedOrigins = new Set<string>();
   if (frontendUrl) {
@@ -88,14 +136,14 @@ async function bootstrap() {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-  const port = process.env.PORT ? parseInt(process.env.PORT, 10) : (configService.get<number>('port') || 4000);
-  const host = '0.0.0.0';
+  // Initialize all NestJS routes, controllers, and modules
+  await app.init();
+  isNestReady = true;
 
-  // Fast port binding for Hostinger and production environments (within 3-second startup SLA)
-  await app.listen(port, host);
-  logger.log(`Imprenta CRM Backend listening on http://${host}:${port} (PID: ${process.pid})`);
+  logger.log(`[Startup] NestJS application fully ready and serving traffic on http://${host}:${port}`);
 }
 
 bootstrap();
+
 
 

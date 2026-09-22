@@ -62,20 +62,30 @@ const logger = new Logger('DatabaseModule');
           uri: rawUri,
           dbName,
           autoIndex: process.env.NODE_ENV !== 'production',
-          serverSelectionTimeoutMS: 8000,
+          serverSelectionTimeoutMS: 5000,
           connectTimeoutMS: 10000,
           socketTimeoutMS: 45000,
-          retryAttempts: 3,
-          retryDelay: 2000,
-          connectionFactory: (connection) => {
+          lazyConnection: true, // Asynchronous non-blocking connection: returns connection immediately without waiting for initial handshake
+          onConnectionCreate: (connection) => {
             connection.on('connected', () => {
-              logger.log(`MongoDB successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);
+              logger.log(`[MongoDB] Successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);
             });
             connection.on('error', (err: any) => {
-              logger.error(`MongoDB connection error: ${err?.message || err}`);
+              logger.error(`[MongoDB] Connection error: ${err?.message || err}`);
             });
             connection.on('disconnected', () => {
-              logger.warn(`MongoDB disconnected from database`);
+              logger.warn(`[MongoDB] Disconnected from database`);
+            });
+          },
+          connectionFactory: (connection) => {
+            connection.on('connected', () => {
+              logger.log(`[MongoDB] Successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);
+            });
+            connection.on('error', (err: any) => {
+              logger.error(`[MongoDB] Connection error: ${err?.message || err}`);
+            });
+            connection.on('disconnected', () => {
+              logger.warn(`[MongoDB] Disconnected from database`);
             });
             return connection;
           },
