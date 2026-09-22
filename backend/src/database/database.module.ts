@@ -62,26 +62,12 @@ const logger = new Logger('DatabaseModule');
           uri: rawUri,
           dbName,
           autoIndex: process.env.NODE_ENV !== 'production',
+          bufferCommands: false, // Fail fast: do not buffer queries for 10s if database is disconnected
           serverSelectionTimeoutMS: 5000,
           connectTimeoutMS: 10000,
           socketTimeoutMS: 45000,
-          lazyConnection: true, // Asynchronous non-blocking connection: returns connection immediately without waiting for initial handshake
-          onConnectionCreate: (connection) => {
-            connection.on('connected', () => {
-              logger.log(`[MongoDB] Successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);
-            });
-            connection.on('error', (err: any) => {
-              const msg = err?.message || String(err);
-              if (msg.includes('alert 80') || msg.includes('tlsv1 alert') || msg.includes('SSL alert')) {
-                logger.error(`[MongoDB TLS/SSL Error] Handshake rejected by MongoDB Atlas (${msg}). Possible cause: Hostinger outbound IP is not allowed in MongoDB Atlas Network Access, or cluster is paused.`);
-              } else {
-                logger.error(`[MongoDB] Connection error: ${msg}`);
-              }
-            });
-            connection.on('disconnected', () => {
-              logger.warn(`[MongoDB] Disconnected from database`);
-            });
-          },
+          family: 4, // Prefer IPv4 DNS lookup to prevent IPv6 handshake issues on hosting environments
+          lazyConnection: true, // Non-blocking connection startup for Hostinger listen SLA
           connectionFactory: (connection) => {
             connection.on('connected', () => {
               logger.log(`[MongoDB] Successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);

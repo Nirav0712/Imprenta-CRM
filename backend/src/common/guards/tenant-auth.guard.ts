@@ -34,9 +34,9 @@ export class TenantAuthGuard implements CanActivate {
 
     // Always allow public health checks, root status, and Meta webhook verification
     if (
-      path === '/health' ||
-      path === '/api/health' ||
       path === '/' ||
+      path.startsWith('/health') ||
+      path.startsWith('/api/health') ||
       path.startsWith('/api/whatsapp/webhook')
     ) {
       return true;

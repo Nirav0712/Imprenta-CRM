@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   BadRequestException,
+  ServiceUnavailableException,
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
@@ -65,6 +66,7 @@ export class AuthService implements OnModuleInit {
    */
   private async seedDefaultAdmin() {
     try {
+      if (this.userModel?.db?.readyState !== 1) return;
       const count = await this.userModel.countDocuments();
       if (count === 0) {
         const defaultEmail = (process.env.ADMIN_EMAIL || 'admin@imprenta.com').trim().toLowerCase();
@@ -103,15 +105,28 @@ export class AuthService implements OnModuleInit {
       throw new BadRequestException('Password is required');
     }
 
+    // 1. Guard against disconnected/unready MongoDB connection: Fail fast with 503
+    const readyState = this.userModel?.db?.readyState;
+    if (readyState !== 1) {
+      this.logger.warn(`Login rejected: Database connection unavailable (readyState=${readyState})`);
+      throw new ServiceUnavailableException('Database temporarily unavailable');
+    }
+
     const normalizedIdentifier = email.trim().toLowerCase();
 
-    // 1. Search database for user by email or username
-    let user = await this.userModel.findOne({
-      $or: [
-        { email: normalizedIdentifier },
-        { name: new RegExp(`^${normalizedIdentifier}$`, 'i') },
-      ],
-    });
+    // 2. Search database for user by email or username
+    let user;
+    try {
+      user = await this.userModel.findOne({
+        $or: [
+          { email: normalizedIdentifier },
+          { name: new RegExp(`^${normalizedIdentifier}$`, 'i') },
+        ],
+      }).exec();
+    } catch (dbErr: any) {
+      this.logger.error(`Database query failed during login: ${dbErr.message}`);
+      throw new ServiceUnavailableException('Database temporarily unavailable');
+    }
 
     // Fallback: If DB had no user yet or connecting initially, verify against configured admin env
     if (!user) {
@@ -141,7 +156,7 @@ export class AuthService implements OnModuleInit {
         } catch {
           user = await this.userModel.findOne({
             $or: [{ email: normalizedIdentifier }, { name: normalizedIdentifier }],
-          });
+          }).exec();
         }
       }
     }
@@ -154,13 +169,13 @@ export class AuthService implements OnModuleInit {
       throw new UnauthorizedException('Account is disabled. Please contact your system administrator.');
     }
 
-    // 2. Validate password
+    // 3. Validate password
     const isMatch = this.verifyPassword(password, user.passwordHash, user.salt);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    // 3. Update last login timestamp
+    // 4. Update last login timestamp
     user.lastLoginAt = new Date();
     await user.save().catch(() => {});
 
@@ -206,23 +221,35 @@ export class AuthService implements OnModuleInit {
       throw new UnauthorizedException('Unauthenticated');
     }
 
-    const user = await this.userModel.findById(userContext.userId).select('-passwordHash -salt');
-    if (user) {
-      return {
-        success: true,
-        user: {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
-          organizationId: user.organizationId,
-          role: user.role,
-        },
-      };
+    if (this.userModel?.db?.readyState === 1) {
+      try {
+        const user = await this.userModel.findById(userContext.userId).select('-passwordHash -salt').exec();
+        if (user) {
+          return {
+            success: true,
+            user: {
+              id: user._id.toString(),
+              email: user.email,
+              name: user.name,
+              organizationId: user.organizationId,
+              role: user.role,
+            },
+          };
+        }
+      } catch (err: any) {
+        this.logger.warn(`Could not fetch user profile from DB: ${err.message}`);
+      }
     }
 
     return {
       success: true,
-      user: userContext,
+      user: {
+        id: userContext.userId || userContext.sub || 'user',
+        email: userContext.email || 'admin@imprenta.internal',
+        name: userContext.name || 'Administrator',
+        organizationId: userContext.organizationId || 'default-org',
+        role: userContext.role || 'admin',
+      },
     };
   }
 }
