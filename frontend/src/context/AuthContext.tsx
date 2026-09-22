@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ? JSON.parse(storedProfile)
           : {
               id: payload?.sub || 'user',
-              email: payload?.email || 'admin@automarket.internal',
+              email: payload?.email || 'admin@imprenta.internal',
               name: payload?.name || 'Administrator',
               organizationId: org,
               role: payload?.role || 'admin',

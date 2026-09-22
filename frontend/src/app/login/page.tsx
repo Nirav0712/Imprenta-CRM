@@ -66,9 +66,9 @@ function LoginForm() {
             <ShieldCheck className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            AutoMarket <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CRM</span>
+            Imprenta <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CRM</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">Sign in to your marketing automation workspace</p>
+          <p className="text-xs text-slate-400 mt-1">Smart CRM & Marketing Automation Platform</p>
         </div>
 
         {/* Card Container */}
@@ -136,7 +136,7 @@ function LoginForm() {
                 </>
               ) : (
                 <>
-                  Sign In
+                  Sign In to Imprenta CRM
                   <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
@@ -153,7 +153,7 @@ function LoginForm() {
         {/* Security badge */}
         <div className="mt-6 flex items-center justify-center gap-2 text-slate-500 text-xs">
           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-          <span>Encrypted Multi-Tenant Authentication</span>
+          <span>Secure Multi-Tenant CRM Access</span>
         </div>
       </div>
     </div>

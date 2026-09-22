@@ -157,10 +157,10 @@ export function Sidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-bold text-slate-900 dark:text-white text-sm tracking-tight truncate">
-                AutoMarket
+                Imprenta
               </div>
               <div className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                Automation OS
+                CRM PLATFORM
               </div>
             </div>
           )}

@@ -4,8 +4,8 @@ import { ThemeProvider } from '../context/ThemeContext';
 import { AppShell } from '../components/layout/AppShell';
 
 export const metadata: Metadata = {
-  title: 'AutoMarket — Marketing Automation OS',
-  description: 'Enterprise Marketing Automation OS with WhatsApp, Email Hub, and Unified CRM',
+  title: 'Imprenta CRM | Customer Relationship Management',
+  description: 'Imprenta CRM helps businesses manage contacts, leads, follow-ups, campaigns, and customer relationships in one platform.',
 };
 
 export default function RootLayout({

@@ -34,7 +34,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
             <Loader2 className="w-14 h-14 absolute animate-spin text-emerald-500/30" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold tracking-wide text-slate-200">AutoMarket OS</h3>
+            <h3 className="text-sm font-semibold tracking-wide text-slate-200">Imprenta CRM</h3>
             <p className="text-xs text-slate-500 mt-0.5">Verifying secure tenant session...</p>
           </div>
         </div>

@@ -62,7 +62,7 @@ export function ContactActionButtons({
 
     setCheckingWhatsApp(true);
     try {
-      // Priority 1: Check if an existing AutoMarket conversation exists for this contact
+      // Priority 1: Check if an existing Imprenta CRM conversation exists for this contact
       const conversations = await inboxApi.getWhatsAppConversations(undefined, cleanWhatsAppDigits);
       const existingConv = (conversations || []).find((c: any) => {
         const cPhone = String(c.customerPhoneNumber || '').replace(/[^0-9]/g, '');

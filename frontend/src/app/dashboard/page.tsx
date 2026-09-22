@@ -101,13 +101,13 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-            Automation OS Overview
+            Welcome to Imprenta CRM
             <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
               Live Real-Time
             </span>
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Central command for WhatsApp & Email campaigns, contact intelligence, and sales pipeline.
+            Manage your customer relationships, leads, campaigns, and business growth from one platform.
           </p>
         </div>
         <div className="flex items-center gap-2.5">
