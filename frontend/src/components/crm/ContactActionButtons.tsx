@@ -147,7 +147,7 @@ export function ContactActionButtons({
 
   return (
     <div
-      className="inline-flex items-center gap-1 bg-slate-50/80 p-0.5 rounded-lg border border-slate-200/60 shadow-2xs"
+      className="inline-flex items-center gap-1 bg-slate-50/80 dark:bg-slate-800/80 p-0.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60 shadow-2xs"
       onClick={(e) => e.stopPropagation()}
     >
       {/* 1. WHATSAPP BUTTON */}
@@ -163,14 +163,14 @@ export function ContactActionButtons({
         }
         className={`${btnSizes[size]} inline-flex items-center gap-1.5 rounded-md font-medium transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500/30 ${
           hasWhatsApp
-            ? 'text-emerald-700 bg-white hover:bg-emerald-50 hover:text-emerald-800 border border-emerald-200/80 shadow-2xs cursor-pointer active:scale-95'
-            : 'text-slate-300 bg-slate-100/50 cursor-not-allowed opacity-60'
+            ? 'text-emerald-700 dark:text-emerald-400 bg-white dark:bg-slate-900 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 hover:text-emerald-800 dark:hover:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 shadow-2xs cursor-pointer active:scale-95'
+            : 'text-slate-300 dark:text-slate-600 bg-slate-100/50 dark:bg-slate-800/40 cursor-not-allowed opacity-60'
         }`}
       >
         {checkingWhatsApp ? (
-          <Loader2 className={`${iconSizes[size]} animate-spin text-emerald-600`} />
+          <Loader2 className={`${iconSizes[size]} animate-spin text-emerald-600 dark:text-emerald-400`} />
         ) : (
-          <MessageCircle className={`${iconSizes[size]} text-emerald-600`} />
+          <MessageCircle className={`${iconSizes[size]} text-emerald-600 dark:text-emerald-400`} />
         )}
         {showLabels && <span>WhatsApp</span>}
       </button>
@@ -188,11 +188,11 @@ export function ContactActionButtons({
         }
         className={`${btnSizes[size]} inline-flex items-center gap-1.5 rounded-md font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/30 ${
           hasEmail
-            ? 'text-blue-700 bg-white hover:bg-blue-50 hover:text-blue-800 border border-blue-200/80 shadow-2xs cursor-pointer active:scale-95'
-            : 'text-slate-300 bg-slate-100/50 cursor-not-allowed opacity-60'
+            ? 'text-blue-700 dark:text-blue-400 bg-white dark:bg-slate-900 hover:bg-blue-50 dark:hover:bg-blue-950/50 hover:text-blue-800 dark:hover:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 shadow-2xs cursor-pointer active:scale-95'
+            : 'text-slate-300 dark:text-slate-600 bg-slate-100/50 dark:bg-slate-800/40 cursor-not-allowed opacity-60'
         }`}
       >
-        <Mail className={`${iconSizes[size]} text-blue-600`} />
+        <Mail className={`${iconSizes[size]} text-blue-600 dark:text-blue-400`} />
         {showLabels && <span>Email</span>}
       </button>
 
@@ -209,14 +209,14 @@ export function ContactActionButtons({
         }
         className={`${btnSizes[size]} inline-flex items-center gap-1.5 rounded-md font-medium transition-all focus:outline-none focus:ring-2 focus:ring-violet-500/30 ${
           hasPhone
-            ? 'text-violet-700 bg-white hover:bg-violet-50 hover:text-violet-800 border border-violet-200/80 shadow-2xs cursor-pointer active:scale-95'
-            : 'text-slate-300 bg-slate-100/50 cursor-not-allowed opacity-60'
+            ? 'text-violet-700 dark:text-violet-400 bg-white dark:bg-slate-900 hover:bg-violet-50 dark:hover:bg-violet-950/50 hover:text-violet-800 dark:hover:text-violet-300 border border-violet-200/80 dark:border-violet-800/60 shadow-2xs cursor-pointer active:scale-95'
+            : 'text-slate-300 dark:text-slate-600 bg-slate-100/50 dark:bg-slate-800/40 cursor-not-allowed opacity-60'
         }`}
       >
         {callingState ? (
-          <Loader2 className={`${iconSizes[size]} animate-spin text-violet-600`} />
+          <Loader2 className={`${iconSizes[size]} animate-spin text-violet-600 dark:text-violet-400`} />
         ) : (
-          <Phone className={`${iconSizes[size]} text-violet-600`} />
+          <Phone className={`${iconSizes[size]} text-violet-600 dark:text-violet-400`} />
         )}
         {showLabels && <span>Call</span>}
       </button>

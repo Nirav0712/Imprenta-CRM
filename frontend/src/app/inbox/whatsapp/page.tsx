@@ -830,13 +830,13 @@ export default function WhatsAppInboxPage() {
       {/* Top Header */}
       <div className="flex items-center justify-between flex-shrink-0">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
             WhatsApp Live Inbox
-            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
               WhatsApp Web Multi-Media
             </span>
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Real-time messaging with rich attachments (Photos, Videos, Audio, Documents, Locations, Reactions & Quoted replies).
           </p>
         </div>
@@ -844,29 +844,29 @@ export default function WhatsAppInboxPage() {
         <div className="flex items-center gap-3">
           {/* Connection Status Badge */}
           {selectedConn && (
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium border bg-white border-slate-200 shadow-2xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium border bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-2xs">
               {selectedConn.status === 'connected' ? (
                 <>
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-emerald-700 font-semibold">Live Connected</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Live Connected</span>
                   {selectedConn.phoneNumber && (
-                    <span className="text-slate-400 font-mono text-[10px]">({selectedConn.phoneNumber})</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-mono text-[10px]">({selectedConn.phoneNumber})</span>
                   )}
                 </>
               ) : selectedConn.status === 'qr_ready' ? (
                 <>
                   <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  <span className="text-amber-700 font-semibold">QR Ready</span>
+                  <span className="text-amber-700 dark:text-amber-400 font-semibold">QR Ready</span>
                 </>
               ) : selectedConn.status === 'connecting' ? (
                 <>
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                  <span className="text-blue-700 font-semibold">Connecting...</span>
+                  <span className="text-blue-700 dark:text-blue-400 font-semibold">Connecting...</span>
                 </>
               ) : (
                 <>
                   <span className="w-2 h-2 rounded-full bg-slate-400" />
-                  <span className="text-slate-600 font-semibold">Disconnected</span>
+                  <span className="text-slate-600 dark:text-slate-300 font-semibold">Disconnected</span>
                 </>
               )}
             </div>
@@ -876,7 +876,7 @@ export default function WhatsAppInboxPage() {
           <select
             value={selectedConnectionId}
             onChange={(e) => setSelectedConnectionId(e.target.value)}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           >
             <option value="">All WhatsApp Connections</option>
             {connections.map((c) => (
@@ -898,7 +898,7 @@ export default function WhatsAppInboxPage() {
           {/* Refresh Button */}
           <button
             onClick={() => loadConversations()}
-            className="p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+            className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-200 transition-colors shadow-2xs"
             title="Refresh conversations"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
@@ -908,18 +908,18 @@ export default function WhatsAppInboxPage() {
 
       {/* Alert & Toast Banners */}
       {errorBanner && (
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700">
-          <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
+        <div className="flex items-center gap-2 px-4 py-2.5 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/60 rounded-xl text-xs text-rose-700 dark:text-rose-300">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600 dark:text-rose-400" />
           <span className="flex-1 font-medium">{errorBanner}</span>
-          <button onClick={() => setErrorBanner(null)} className="text-rose-500 hover:text-rose-800 text-xs font-semibold">
+          <button onClick={() => setErrorBanner(null)} className="text-rose-500 hover:text-rose-800 dark:hover:text-rose-200 text-xs font-semibold">
             Dismiss
           </button>
         </div>
       )}
 
       {successToast && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 animate-fade-in">
-          <Sparkles className="w-4 h-4 flex-shrink-0 text-emerald-600" />
+        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 rounded-xl text-xs text-emerald-800 dark:text-emerald-300 animate-fade-in">
+          <Sparkles className="w-4 h-4 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
           <span className="flex-1 font-medium">{successToast}</span>
         </div>
       )}
@@ -937,38 +937,38 @@ export default function WhatsAppInboxPage() {
           const file = e.dataTransfer.files?.[0];
           if (file) processSelectedFile(file);
         }}
-        className={`flex-1 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs flex min-h-0 relative ${
-          isDraggingOver ? 'ring-2 ring-emerald-500 bg-emerald-50/20' : ''
+        className={`flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs flex min-h-0 relative ${
+          isDraggingOver ? 'ring-2 ring-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20' : ''
         }`}
       >
         {/* Drag Overlay Notice */}
         {isDraggingOver && (
           <div className="absolute inset-0 bg-emerald-600/10 backdrop-blur-2xs z-30 flex items-center justify-center pointer-events-none">
-            <div className="bg-white border-2 border-dashed border-emerald-500 p-6 rounded-2xl shadow-xl text-center space-y-2">
-              <ImageIcon className="w-10 h-10 text-emerald-600 mx-auto animate-bounce" />
-              <div className="text-sm font-bold text-slate-800">Drop your file here to attach</div>
-              <p className="text-xs text-slate-500">Supports images, documents, audio, and video</p>
+            <div className="bg-white dark:bg-slate-850 border-2 border-dashed border-emerald-500 p-6 rounded-2xl shadow-xl text-center space-y-2">
+              <ImageIcon className="w-10 h-10 text-emerald-600 dark:text-emerald-400 mx-auto animate-bounce" />
+              <div className="text-sm font-bold text-slate-800 dark:text-slate-100">Drop your file here to attach</div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Supports images, documents, audio, and video</p>
             </div>
           </div>
         )}
 
         {/* Left Pane: Conversation List */}
-        <div className="w-80 md:w-96 border-r border-slate-200 flex flex-col flex-shrink-0 bg-slate-50/50">
+        <div className="w-80 md:w-96 border-r border-slate-200 dark:border-slate-800 flex flex-col flex-shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
           {/* Search bar */}
-          <div className="p-3 border-b border-slate-200/80 bg-white space-y-2">
+          <div className="p-3 border-b border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search chats or phone number..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-8 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50/50"
+                className="w-full pl-9 pr-8 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50/50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
               />
               {search && (
                 <button
                   onClick={() => setSearch('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -984,7 +984,7 @@ export default function WhatsAppInboxPage() {
                   className={`px-3 py-1 rounded-full text-[11px] font-semibold capitalize transition-colors ${
                     filterTab === tab
                       ? 'bg-emerald-600 text-white shadow-2xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-slate-700'
                   }`}
                 >
                   {tab === 'pinned' ? '📌 Pinned' : tab}
@@ -994,7 +994,7 @@ export default function WhatsAppInboxPage() {
           </div>
 
           {/* Conversations List */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
             {loading ? (
               <div className="p-8 text-center text-xs text-slate-400 flex flex-col items-center gap-2">
                 <RefreshCw className="w-5 h-5 animate-spin text-slate-400" />
@@ -1002,11 +1002,11 @@ export default function WhatsAppInboxPage() {
               </div>
             ) : conversations.length === 0 ? (
               <div className="p-8 text-center">
-                <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2.5 text-slate-400">
+                <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-2.5 text-slate-400">
                   <MessageSquare className="w-6 h-6" />
                 </div>
-                <div className="text-xs font-semibold text-slate-700">No conversations found</div>
-                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed max-w-xs mx-auto">
+                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200">No conversations found</div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed max-w-xs mx-auto">
                   {selectedConn?.status === 'connected'
                     ? `Send a WhatsApp test message to ${selectedConn.phoneNumber || 'the connected number'} or click '+ New Chat'.`
                     : selectedConn?.status === 'qr_ready'
@@ -1016,7 +1016,7 @@ export default function WhatsAppInboxPage() {
                 {selectedConn?.status === 'connected' && (
                   <button
                     onClick={() => setShowNewChatModal(true)}
-                    className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100"
+                    className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
                   >
                     <Plus className="w-3.5 h-3.5" /> Start New Chat
                   </button>
@@ -1033,12 +1033,12 @@ export default function WhatsAppInboxPage() {
                     onClick={() => handleSelectConversation(conv)}
                     className={`w-full text-left p-3.5 transition-colors flex items-start gap-3 relative cursor-pointer group ${
                       isSelected
-                        ? 'bg-emerald-50/80 border-l-4 border-emerald-600'
-                        : 'hover:bg-slate-100/60'
+                        ? 'bg-emerald-50/80 dark:bg-emerald-950/50 border-l-4 border-emerald-600'
+                        : 'hover:bg-slate-100/60 dark:hover:bg-slate-800/60'
                     }`}
                   >
                     {/* Avatar */}
-                    <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs flex-shrink-0 relative">
+                    <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 flex items-center justify-center font-bold text-xs flex-shrink-0 relative">
                       {conv.customerName ? conv.customerName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
                       {conv.isPinned && (
                         <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 text-[9px] text-white rounded-full flex items-center justify-center shadow-xs">
@@ -1050,7 +1050,7 @@ export default function WhatsAppInboxPage() {
                     {/* Metadata & Message preview */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-xs text-slate-900 truncate flex items-center gap-1">
+                        <span className="font-semibold text-xs text-slate-900 dark:text-slate-100 truncate flex items-center gap-1">
                           {conv.customerName || conv.customerPhoneNumber}
                         </span>
                         <div className="flex items-center gap-1.5">
@@ -1059,7 +1059,7 @@ export default function WhatsAppInboxPage() {
                               {conv.unreadCount}
                             </span>
                           )}
-                          <span className="text-[10px] text-slate-400">
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500">
                             {new Date(conv.lastActivityAt).toLocaleTimeString([], {
                               hour: '2-digit',
                               minute: '2-digit',
@@ -1068,9 +1068,9 @@ export default function WhatsAppInboxPage() {
                         </div>
                       </div>
 
-                      <div className="text-[11px] text-slate-500 font-mono truncate">{conv.customerPhoneNumber}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate">{conv.customerPhoneNumber}</div>
 
-                      <div className="text-xs text-slate-600 truncate mt-0.5 font-normal flex items-center gap-1">
+                      <div className="text-xs text-slate-600 dark:text-slate-300 truncate mt-0.5 font-normal flex items-center gap-1">
                         {conv.lastMessageText || '(No messages yet)'}
                       </div>
                     </div>
@@ -1081,7 +1081,7 @@ export default function WhatsAppInboxPage() {
                         e.stopPropagation();
                         setActiveMenuConvId(isMenuOpen ? null : conv._id);
                       }}
-                      className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition-opacity"
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-opacity"
                       title="More options"
                     >
                       <MoreVertical className="w-3.5 h-3.5" />
@@ -1091,25 +1091,25 @@ export default function WhatsAppInboxPage() {
                     {isMenuOpen && (
                       <div
                         onClick={(e) => e.stopPropagation()}
-                        className="absolute right-4 top-10 w-44 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1 text-xs text-slate-700 animate-in fade-in zoom-in-95"
+                        className="absolute right-4 top-10 w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-20 py-1 text-xs text-slate-700 dark:text-slate-200 animate-in fade-in zoom-in-95"
                       >
                         <button
                           onClick={(e) => handleTogglePin(conv, e)}
-                          className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2"
+                          className="w-full text-left px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 flex items-center gap-2"
                         >
                           {conv.isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5 text-amber-500" />}
                           <span>{conv.isPinned ? 'Unpin chat' : 'Pin chat'}</span>
                         </button>
                         <button
                           onClick={(e) => handleToggleRead(conv, e)}
-                          className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2"
+                          className="w-full text-left px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 flex items-center gap-2"
                         >
-                          <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
+                          <CheckCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                           <span>{conv.unreadCount > 0 ? 'Mark as read' : 'Mark as unread'}</span>
                         </button>
                         <button
                           onClick={(e) => handleClearChatHistory(conv, e)}
-                          className="w-full text-left px-3.5 py-2 hover:bg-rose-50 text-rose-600 flex items-center gap-2"
+                          className="w-full text-left px-3.5 py-2 hover:bg-rose-50 dark:hover:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center gap-2"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           <span>Clear messages</span>
@@ -1125,17 +1125,17 @@ export default function WhatsAppInboxPage() {
 
         {/* Right Pane: WhatsApp Web Message Thread */}
         {selectedConversation ? (
-          <div className="flex-1 flex flex-col min-w-0 bg-[#efeae2]/20 relative">
+          <div className="flex-1 flex flex-col min-w-0 bg-[#efeae2]/20 dark:bg-slate-950/60 relative">
             {/* Thread Header */}
-            <div className="p-3.5 bg-white border-b border-slate-200 flex items-center justify-between flex-shrink-0 z-10 shadow-2xs">
+            <div className="p-3.5 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between flex-shrink-0 z-10 shadow-2xs">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 flex items-center justify-center font-bold text-sm">
                   {selectedConversation.customerName
                     ? selectedConversation.customerName.charAt(0).toUpperCase()
                     : 'C'}
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     {selectedConversation.customerName || selectedConversation.customerPhoneNumber}
                     {selectedConversation.isPinned && (
                       <span className="text-xs text-amber-500" title="Pinned conversation">
@@ -1143,29 +1143,29 @@ export default function WhatsAppInboxPage() {
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-slate-500 font-mono flex items-center gap-2">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 font-mono flex items-center gap-2">
                     <span>{selectedConversation.customerPhoneNumber}</span>
                     {selectedConversation.contactId?.company && (
-                      <span className="text-slate-400">• {selectedConversation.contactId.company}</span>
+                      <span className="text-slate-400 dark:text-slate-500">• {selectedConversation.contactId.company}</span>
                     )}
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   Live Ephemeral Stream
                 </span>
 
-                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                  <MessageSquare className="w-3 h-3 text-emerald-600" />
+                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                  <MessageSquare className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                   {selectedConversation.connectionId?.name || 'WhatsApp Session'}
                 </span>
 
                 <button
                   onClick={() => handleTogglePin(selectedConversation)}
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                  className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                   title={selectedConversation.isPinned ? 'Unpin chat' : 'Pin chat'}
                 >
                   {selectedConversation.isPinned ? (
@@ -1177,7 +1177,7 @@ export default function WhatsAppInboxPage() {
 
                 <button
                   onClick={() => handleClearChatHistory(selectedConversation)}
-                  className="p-2 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                  className="p-2 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/50 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                   title="Clear chat history"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -1189,27 +1189,27 @@ export default function WhatsAppInboxPage() {
             <div
               ref={messagesContainerRef}
               onScroll={handleScroll}
-              className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#efeae2]/15"
+              className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#efeae2]/15 dark:bg-[#0b0f19]/80"
             >
               {/* Upward pagination loading indicator */}
               {loadingOlder && (
-                <div className="py-2 text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
+                <div className="py-2 text-center text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-center gap-1.5">
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Loading live messages...
                 </div>
               )}
 
               {loadingMessages ? (
-                <div className="p-16 text-center text-xs text-slate-400 flex flex-col items-center gap-2">
-                  <RefreshCw className="w-6 h-6 animate-spin text-emerald-600" />
+                <div className="p-16 text-center text-xs text-slate-400 dark:text-slate-500 flex flex-col items-center gap-2">
+                  <RefreshCw className="w-6 h-6 animate-spin text-emerald-600 dark:text-emerald-400" />
                   <span>Connecting live chat stream...</span>
                 </div>
               ) : messages.length === 0 ? (
                 <div className="p-16 text-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-2">
                     <MessageSquare className="w-6 h-6" />
                   </div>
-                  <div className="text-xs font-semibold text-slate-700">Live Active Session Ready</div>
-                  <p className="text-[11px] text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
+                  <div className="text-xs font-semibold text-slate-700 dark:text-slate-200">Live Active Session Ready</div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
                     Live messages stream in real-time during active sessions (Zero permanent database chat storage). Use the rich composer below to send text, photos, documents, voice notes, location, or contacts.
                   </p>
                 </div>
@@ -1218,7 +1218,7 @@ export default function WhatsAppInboxPage() {
                   <div key={gIdx} className="space-y-3">
                     {/* Date Separator Pill */}
                     <div className="flex justify-center my-2">
-                      <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-white border border-slate-200 text-slate-500 shadow-2xs">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-2xs">
                         {group.dateLabel}
                       </span>
                     </div>
@@ -1241,11 +1241,11 @@ export default function WhatsAppInboxPage() {
                               className={`p-3.5 rounded-2xl text-xs leading-relaxed transition-shadow relative ${
                                 isOutbound
                                   ? isFailed
-                                    ? 'bg-rose-50 border border-rose-200 text-rose-900 rounded-br-xs'
+                                    ? 'bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/60 text-rose-900 dark:text-rose-200 rounded-br-xs'
                                     : 'bg-emerald-600 text-white rounded-br-xs shadow-xs'
                                   : isPendingDecryption
-                                  ? 'bg-amber-50 border border-amber-200 text-amber-900 rounded-bl-xs shadow-2xs'
-                                  : 'bg-white border border-slate-200 text-slate-800 rounded-bl-xs shadow-2xs'
+                                  ? 'bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 rounded-bl-xs shadow-2xs'
+                                  : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-bl-xs shadow-2xs'
                               }`}
                             >
                               {/* Quoted Message Reference Header */}
@@ -1254,7 +1254,7 @@ export default function WhatsAppInboxPage() {
                                   className={`mb-2 p-2 rounded-lg text-[11px] border-l-4 ${
                                     isOutbound
                                       ? 'bg-emerald-700/60 border-emerald-300 text-emerald-100'
-                                      : 'bg-slate-100 border-emerald-600 text-slate-700'
+                                      : 'bg-slate-100 dark:bg-slate-700 border-emerald-600 text-slate-700 dark:text-slate-200'
                                   }`}
                                 >
                                   <div className="font-bold text-[10px]">
@@ -1268,11 +1268,11 @@ export default function WhatsAppInboxPage() {
                               {/* 1. Decryption Pending Card */}
                               {isPendingDecryption ? (
                                 <div className="space-y-1.5">
-                                  <div className="flex items-center gap-1.5 font-bold text-amber-800">
-                                    <Clock className="w-4 h-4 text-amber-600 animate-pulse" />
+                                  <div className="flex items-center gap-1.5 font-bold text-amber-800 dark:text-amber-300">
+                                    <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 animate-pulse" />
                                     <span>Waiting for this message</span>
                                   </div>
-                                  <p className="text-[11px] text-amber-700 leading-normal">
+                                  <p className="text-[11px] text-amber-700 dark:text-amber-300/80 leading-normal">
                                     This may take a moment while WhatsApp syncs end-to-end Signal encryption keys with your linked mobile device.
                                   </p>
                                 </div>
@@ -1340,7 +1340,7 @@ export default function WhatsAppInboxPage() {
                                         </span>
                                         <span>{msg.duration ? `${Math.round(msg.duration)}s` : 'Audio'}</span>
                                       </div>
-                                      <div className={`h-1.5 rounded-full ${isOutbound ? 'bg-emerald-700' : 'bg-slate-200'}`}>
+                                      <div className={`h-1.5 rounded-full ${isOutbound ? 'bg-emerald-700' : 'bg-slate-200 dark:bg-slate-700'}`}>
                                         <div
                                           className={`h-full rounded-full ${
                                             playingAudioId === msg._id ? 'w-full animate-pulse bg-white' : 'w-1/3 bg-emerald-500'
@@ -1357,7 +1357,7 @@ export default function WhatsAppInboxPage() {
                                     className={`flex items-center gap-3 p-2.5 rounded-xl border ${
                                       isOutbound
                                         ? 'bg-emerald-700/60 border-emerald-500/50 text-white'
-                                        : 'bg-slate-50 border-slate-200 text-slate-800'
+                                        : 'bg-slate-50 dark:bg-slate-700/60 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100'
                                     }`}
                                   >
                                     <div className="w-9 h-9 rounded-lg bg-red-500/20 text-red-500 flex items-center justify-center flex-shrink-0">
@@ -1391,7 +1391,7 @@ export default function WhatsAppInboxPage() {
                                     className={`p-3 rounded-xl border ${
                                       isOutbound
                                         ? 'bg-emerald-700/60 border-emerald-500/50 text-white'
-                                        : 'bg-slate-50 border-slate-200 text-slate-800'
+                                        : 'bg-slate-50 dark:bg-slate-700/60 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100'
                                     }`}
                                   >
                                     <div className="flex items-center gap-2 mb-1">
@@ -1419,7 +1419,7 @@ export default function WhatsAppInboxPage() {
                                     className={`p-3 rounded-xl border ${
                                       isOutbound
                                         ? 'bg-emerald-700/60 border-emerald-500/50 text-white'
-                                        : 'bg-slate-50 border-slate-200 text-slate-800'
+                                        : 'bg-slate-50 dark:bg-slate-700/60 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100'
                                     }`}
                                   >
                                     <div className="flex items-center gap-2.5 mb-2">
@@ -1454,7 +1454,7 @@ export default function WhatsAppInboxPage() {
 
                               {/* Error info if failed */}
                               {isFailed && msg.errorMessage && (
-                                <div className="mt-1.5 text-[10px] text-rose-600 flex items-center gap-1 font-medium">
+                                <div className="mt-1.5 text-[10px] text-rose-600 dark:text-rose-400 flex items-center gap-1 font-medium">
                                   <AlertCircle className="w-3 h-3" />
                                   <span>{msg.errorMessage}</span>
                                 </div>
@@ -1465,9 +1465,9 @@ export default function WhatsAppInboxPage() {
                                 className={`mt-1.5 flex items-center justify-end gap-1 text-[10px] ${
                                   isOutbound
                                     ? isFailed
-                                      ? 'text-rose-500'
+                                      ? 'text-rose-500 dark:text-rose-300'
                                       : 'text-emerald-100'
-                                    : 'text-slate-400'
+                                    : 'text-slate-400 dark:text-slate-500'
                                 }`}
                               >
                                 <span>
@@ -1511,7 +1511,7 @@ export default function WhatsAppInboxPage() {
                                 <div
                                   className={`absolute -bottom-2.5 ${
                                     isOutbound ? 'left-2' : 'right-2'
-                                  } bg-white border border-slate-200 rounded-full px-1.5 py-0.5 text-xs shadow-xs flex items-center gap-0.5`}
+                                  } bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-1.5 py-0.5 text-xs shadow-xs flex items-center gap-0.5`}
                                   title={`Reacted with ${msg.reactionEmoji}`}
                                 >
                                   <span>{msg.reactionEmoji}</span>
@@ -1523,7 +1523,7 @@ export default function WhatsAppInboxPage() {
                             <div
                               className={`absolute top-1 ${
                                 isOutbound ? '-left-24' : '-right-24'
-                              } opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 shadow-2xs z-20`}
+                              } opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1 shadow-2xs z-20`}
                             >
                               {/* Reply Button */}
                               <button
@@ -1536,7 +1536,7 @@ export default function WhatsAppInboxPage() {
                                       : selectedConversation.customerName || selectedConversation.customerPhoneNumber,
                                   })
                                 }
-                                className="p-1 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-800"
+                                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
                                 title="Reply to message"
                               >
                                 <Reply className="w-3 h-3" />
@@ -1547,7 +1547,7 @@ export default function WhatsAppInboxPage() {
                                 onClick={() =>
                                   setActiveReactionMsgId((prev) => (prev === msg._id ? null : msg._id))
                                 }
-                                className="p-1 hover:bg-slate-100 rounded text-slate-500 hover:text-amber-600"
+                                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400"
                                 title="React with emoji"
                               >
                                 <Smile className="w-3 h-3" />
@@ -1556,7 +1556,7 @@ export default function WhatsAppInboxPage() {
                               {/* Copy Text */}
                               <button
                                 onClick={() => handleCopyText(msg.messageBody)}
-                                className="p-1 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-800"
+                                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100"
                                 title="Copy text"
                               >
                                 <Copy className="w-3 h-3" />
@@ -1566,7 +1566,7 @@ export default function WhatsAppInboxPage() {
                               {isFailed && (
                                 <button
                                   onClick={() => handleRetryMessage(msg)}
-                                  className="p-1 hover:bg-emerald-50 rounded text-rose-600 hover:text-emerald-700"
+                                  className="p-1 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded text-rose-600 dark:text-rose-400 hover:text-emerald-700 dark:hover:text-emerald-300"
                                   title="Retry sending"
                                 >
                                   <RotateCcw className="w-3 h-3" />
@@ -1579,7 +1579,7 @@ export default function WhatsAppInboxPage() {
                               <div
                                 className={`absolute -top-10 ${
                                   isOutbound ? 'right-0' : 'left-0'
-                                } bg-white border border-slate-200 rounded-full px-2 py-1 shadow-lg z-30 flex items-center gap-1.5 animate-in fade-in zoom-in-95 text-base`}
+                                } bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-2 py-1 shadow-lg z-30 flex items-center gap-1.5 animate-in fade-in zoom-in-95 text-base`}
                               >
                                 {['👍', '❤️', '😂', '😮', '😢', '🙏', '🔥', '🎉'].map((emoji) => (
                                   <button
@@ -1605,7 +1605,7 @@ export default function WhatsAppInboxPage() {
             {showScrollBottom && (
               <button
                 onClick={scrollToBottom}
-                className="absolute right-6 bottom-24 p-2.5 rounded-full bg-white border border-slate-200 shadow-md hover:bg-slate-50 text-slate-600 z-10 transition-transform active:scale-95"
+                className="absolute right-6 bottom-24 p-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-200 z-10 transition-transform active:scale-95"
                 title="Scroll to bottom"
               >
                 <ArrowDown className="w-4 h-4" />
@@ -1614,19 +1614,19 @@ export default function WhatsAppInboxPage() {
 
             {/* Quoted Message Active Preview Bar */}
             {quotedMessage && (
-              <div className="px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between z-10">
+              <div className="px-4 py-2 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between z-10">
                 <div className="flex items-center gap-2 text-xs border-l-4 border-emerald-600 pl-2">
-                  <Reply className="w-3.5 h-3.5 text-emerald-600" />
+                  <Reply className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   <div>
-                    <span className="font-bold text-emerald-800">Replying to {quotedMessage.sender}:</span>
-                    <span className="text-slate-600 ml-1 truncate max-w-md inline-block align-bottom">
+                    <span className="font-bold text-emerald-800 dark:text-emerald-300">Replying to {quotedMessage.sender}:</span>
+                    <span className="text-slate-600 dark:text-slate-400 ml-1 truncate max-w-md inline-block align-bottom">
                       {quotedMessage.body}
                     </span>
                   </div>
                 </div>
                 <button
                   onClick={() => setQuotedMessage(null)}
-                  className="text-slate-400 hover:text-slate-700 p-1"
+                  className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1"
                   title="Cancel reply"
                 >
                   <X className="w-4 h-4" />
@@ -1636,21 +1636,21 @@ export default function WhatsAppInboxPage() {
 
             {/* Pending Attachment Preview Bar */}
             {pendingAttachment && (
-              <div className="p-3 bg-emerald-50/70 border-t border-emerald-200 flex items-center gap-3 z-10 animate-in fade-in">
+              <div className="p-3 bg-emerald-50/70 dark:bg-emerald-950/60 border-t border-emerald-200 dark:border-emerald-800 flex items-center gap-3 z-10 animate-in fade-in">
                 {pendingAttachment.previewUrl ? (
                   <img
                     src={pendingAttachment.previewUrl}
                     alt="Preview"
-                    className="w-12 h-12 rounded-lg object-cover border border-emerald-300"
+                    className="w-12 h-12 rounded-lg object-cover border border-emerald-300 dark:border-emerald-700"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-lg bg-emerald-200 text-emerald-800 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-lg bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300 flex items-center justify-center">
                     <File className="w-6 h-6" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-xs text-emerald-950 truncate">{pendingAttachment.filename}</div>
-                  <div className="text-[10px] text-emerald-700 uppercase font-semibold">
+                  <div className="font-bold text-xs text-emerald-950 dark:text-emerald-200 truncate">{pendingAttachment.filename}</div>
+                  <div className="text-[10px] text-emerald-700 dark:text-emerald-400 uppercase font-semibold">
                     {pendingAttachment.type} • {(pendingAttachment.fileSize / 1024).toFixed(1)} KB
                   </div>
                   <input
@@ -1658,12 +1658,12 @@ export default function WhatsAppInboxPage() {
                     placeholder="Add an optional caption..."
                     value={attachmentCaption}
                     onChange={(e) => setAttachmentCaption(e.target.value)}
-                    className="mt-1 w-full px-2.5 py-1 text-xs rounded-lg border border-emerald-300 bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    className="mt-1 w-full px-2.5 py-1 text-xs rounded-lg border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   />
                 </div>
                 <button
                   onClick={() => setPendingAttachment(null)}
-                  className="p-1.5 rounded-lg text-emerald-700 hover:bg-emerald-200/60"
+                  className="p-1.5 rounded-lg text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200/60 dark:hover:bg-emerald-900/60"
                   title="Remove attachment"
                 >
                   <X className="w-4 h-4" />
@@ -1672,10 +1672,10 @@ export default function WhatsAppInboxPage() {
             )}
 
             {/* Outbound Message Composer */}
-            <div className="p-3 bg-white border-t border-slate-200 flex flex-col gap-2 flex-shrink-0 relative">
+            <div className="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2 flex-shrink-0 relative">
               {/* Quick Emojis Bar */}
               {showEmojiPicker && (
-                <div className="flex items-center gap-2 p-2 bg-slate-50 border border-slate-200 rounded-xl text-base animate-in fade-in">
+                <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-base animate-in fade-in">
                   {['👍', '❤️', '😊', '🙏', '🔥', '🎉', '✅', '👋', '💯', '✨', '👏', '🎯'].map((emoji) => (
                     <button
                       key={emoji}
@@ -1690,13 +1690,13 @@ export default function WhatsAppInboxPage() {
 
               {/* Attachment Picker Menu Popover */}
               {showAttachMenu && (
-                <div className="absolute bottom-16 left-4 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-20 w-52 space-y-1 animate-in fade-in zoom-in-95 text-xs text-slate-700">
+                <div className="absolute bottom-16 left-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl p-2 z-20 w-52 space-y-1 animate-in fade-in zoom-in-95 text-xs text-slate-700 dark:text-slate-200">
                   <button
                     type="button"
                     onClick={() => imageInputRef.current?.click()}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl flex items-center gap-2.5 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-xl flex items-center gap-2.5 font-medium"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                       <ImageIcon className="w-4 h-4" />
                     </span>
                     <span>Photos & Videos</span>
@@ -1705,9 +1705,9 @@ export default function WhatsAppInboxPage() {
                   <button
                     type="button"
                     onClick={() => docInputRef.current?.click()}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl flex items-center gap-2.5 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-xl flex items-center gap-2.5 font-medium"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center">
                       <FileText className="w-4 h-4" />
                     </span>
                     <span>Document (PDF/DOC)</span>
@@ -1716,9 +1716,9 @@ export default function WhatsAppInboxPage() {
                   <button
                     type="button"
                     onClick={() => audioInputRef.current?.click()}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl flex items-center gap-2.5 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-xl flex items-center gap-2.5 font-medium"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center">
                       <Mic className="w-4 h-4" />
                     </span>
                     <span>Audio / Voice Note</span>
@@ -1730,9 +1730,9 @@ export default function WhatsAppInboxPage() {
                       setShowAttachMenu(false);
                       setShowLocationModal(true);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl flex items-center gap-2.5 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-xl flex items-center gap-2.5 font-medium"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 flex items-center justify-center">
                       <MapPin className="w-4 h-4" />
                     </span>
                     <span>Share Location</span>
@@ -1744,9 +1744,9 @@ export default function WhatsAppInboxPage() {
                       setShowAttachMenu(false);
                       setShowContactModal(true);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl flex items-center gap-2.5 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-xl flex items-center gap-2.5 font-medium"
                   >
-                    <span className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                       <UserPlus className="w-4 h-4" />
                     </span>
                     <span>Share Contact</span>
@@ -1759,8 +1759,8 @@ export default function WhatsAppInboxPage() {
                 <button
                   type="button"
                   onClick={() => setShowEmojiPicker((prev) => !prev)}
-                  className={`p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors ${
-                    showEmojiPicker ? 'bg-slate-100 text-emerald-600' : ''
+                  className={`p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors ${
+                    showEmojiPicker ? 'bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400' : ''
                   }`}
                   title="Insert emoji"
                 >
@@ -1771,8 +1771,8 @@ export default function WhatsAppInboxPage() {
                 <button
                   type="button"
                   onClick={() => setShowAttachMenu((prev) => !prev)}
-                  className={`p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors ${
-                    showAttachMenu ? 'bg-emerald-50 text-emerald-600 border-emerald-300' : ''
+                  className={`p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors ${
+                    showAttachMenu ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-700' : ''
                   }`}
                   title="Attach file, photo, audio, or location"
                 >
@@ -1798,7 +1798,7 @@ export default function WhatsAppInboxPage() {
                       ? 'Add an optional caption for attachment (Enter to send)...'
                       : 'Type a message (Enter to send, Shift+Enter for new line, Ctrl+V to paste images)...'
                   }
-                  className="flex-1 px-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none max-h-24 bg-slate-50/50"
+                  className="flex-1 px-4 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none max-h-24 bg-slate-50/50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
                 />
 
                 {/* Submit / Send Button */}
@@ -1818,13 +1818,13 @@ export default function WhatsAppInboxPage() {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-center p-12 text-slate-400 bg-slate-50/30">
+          <div className="flex-1 flex items-center justify-center text-center p-12 text-slate-400 dark:text-slate-500 bg-slate-50/30 dark:bg-slate-900/30">
             <div>
-              <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+              <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-3">
                 <MessageSquare className="w-7 h-7" />
               </div>
-              <div className="text-sm font-bold text-slate-700">WhatsApp Web Inbox</div>
-              <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+              <div className="text-sm font-bold text-slate-700 dark:text-slate-200">WhatsApp Web Inbox</div>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-sm mx-auto">
                 {conversations.length === 0
                   ? 'Connect a WhatsApp account or start a new chat to begin messaging customers.'
                   : 'Select a conversation from the left pane to view messages and reply in real time.'}
@@ -1864,49 +1864,49 @@ export default function WhatsAppInboxPage() {
 
       {/* Location Sharing Modal */}
       {showLocationModal && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-rose-600" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-rose-600 dark:text-rose-400" />
                 Share Location Pin
               </h2>
-              <button onClick={() => setShowLocationModal(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowLocationModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <form onSubmit={handleSendLocation} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Place / Address Label</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Place / Address Label</label>
                 <input
                   type="text"
                   value={locationName}
                   onChange={(e) => setLocationName(e.target.value)}
                   placeholder="e.g. Office Headquarters"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   required
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Latitude</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Latitude</label>
                   <input
                     type="text"
                     value={locationLat}
                     onChange={(e) => setLocationLat(e.target.value)}
                     placeholder="28.6139"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Longitude</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Longitude</label>
                   <input
                     type="text"
                     value={locationLng}
                     onChange={(e) => setLocationLng(e.target.value)}
                     placeholder="77.2090"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
                     required
                   />
                 </div>
@@ -1915,7 +1915,7 @@ export default function WhatsAppInboxPage() {
                 <button
                   type="button"
                   onClick={() => setShowLocationModal(false)}
-                  className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                  className="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
                 >
                   Cancel
                 </button>
@@ -1933,37 +1933,37 @@ export default function WhatsAppInboxPage() {
 
       {/* Contact Sharing Modal */}
       {showContactModal && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 Share Contact Card
               </h2>
-              <button onClick={() => setShowContactModal(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowContactModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <form onSubmit={handleSendContact} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Contact Full Name *</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Contact Full Name *</label>
                 <input
                   type="text"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
                   placeholder="e.g. Rahul Sharma"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number (with Country Code) *</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone Number (with Country Code) *</label>
                 <input
                   type="text"
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   placeholder="+919876543210"
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
                   required
                 />
               </div>
@@ -1971,7 +1971,7 @@ export default function WhatsAppInboxPage() {
                 <button
                   type="button"
                   onClick={() => setShowContactModal(false)}
-                  className="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                  className="px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
                 >
                   Cancel
                 </button>
@@ -1990,16 +1990,16 @@ export default function WhatsAppInboxPage() {
 
       {/* Start New Chat Modal */}
       {showNewChatModal && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 Start New WhatsApp Chat
               </h2>
               <button
                 onClick={() => setShowNewChatModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2008,13 +2008,13 @@ export default function WhatsAppInboxPage() {
             <form onSubmit={handleStartNewChat} className="space-y-4">
               {/* WhatsApp Connection */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Send From WhatsApp Account *
                 </label>
                 <select
                   value={selectedConnectionId}
                   onChange={(e) => setSelectedConnectionId(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   required
                 >
                   {connections.map((c) => (
@@ -2028,7 +2028,7 @@ export default function WhatsAppInboxPage() {
               {/* Quick Contact Picker */}
               {availableContacts.length > 0 && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Or Select Existing Contact
                   </label>
                   <select
@@ -2039,7 +2039,7 @@ export default function WhatsAppInboxPage() {
                         setNewChatName(contact.fullName || '');
                       }
                     }}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-600"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   >
                     <option value="">-- Choose a contact from address book --</option>
                     {availableContacts.map((c) => (
@@ -2053,7 +2053,7 @@ export default function WhatsAppInboxPage() {
 
               {/* Recipient Phone Number */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Recipient Phone Number (with Country Code) *
                 </label>
                 <input
@@ -2061,14 +2061,14 @@ export default function WhatsAppInboxPage() {
                   placeholder="+14155552671 or +919876543210"
                   value={newChatPhone}
                   onChange={(e) => setNewChatPhone(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 font-mono"
                   required
                 />
               </div>
 
               {/* Customer Name */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Customer / Lead Name (Optional)
                 </label>
                 <input
@@ -2076,13 +2076,13 @@ export default function WhatsAppInboxPage() {
                   placeholder="e.g. John Doe"
                   value={newChatName}
                   onChange={(e) => setNewChatName(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 />
               </div>
 
               {/* Initial Message */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Initial Message (Optional)
                 </label>
                 <textarea
@@ -2090,7 +2090,7 @@ export default function WhatsAppInboxPage() {
                   placeholder="Hi there! Following up regarding..."
                   value={newChatMessage}
                   onChange={(e) => setNewChatMessage(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 resize-none"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 resize-none"
                 />
               </div>
 
@@ -2098,7 +2098,7 @@ export default function WhatsAppInboxPage() {
                 <button
                   type="button"
                   onClick={() => setShowNewChatModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
                 >
                   Cancel
                 </button>

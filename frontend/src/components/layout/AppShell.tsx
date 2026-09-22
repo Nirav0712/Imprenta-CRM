@@ -17,11 +17,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {isLoginPage ? (
           children
         ) : (
-          <div className="flex h-full w-full">
+          <div className="flex h-full w-full bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100">
             <Sidebar />
             <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
               <Navbar />
-              <main className="flex-1 overflow-y-auto p-6 flex flex-col min-h-0">
+              <main className="flex-1 overflow-y-auto p-6 flex flex-col min-h-0 bg-slate-50 dark:bg-[#0b0f19]">
                 <div className="max-w-7xl w-full mx-auto flex-1 flex flex-col min-h-0">{children}</div>
               </main>
             </div>

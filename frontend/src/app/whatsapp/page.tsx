@@ -240,8 +240,8 @@ export default function WhatsAppHubPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">WhatsApp Hub</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">WhatsApp Hub</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Configure official Meta Cloud Business API connections, manage templates, and connect regular WhatsApp QR sessions.
           </p>
         </div>
@@ -257,13 +257,13 @@ export default function WhatsAppHubPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
         <button
           onClick={() => setActiveTab('official')}
           className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors ${
             activeTab === 'official'
-              ? 'border-emerald-600 text-emerald-700'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
+              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           Official Meta API ({officialConnections.length})
@@ -272,8 +272,8 @@ export default function WhatsAppHubPage() {
           onClick={() => setActiveTab('regular')}
           className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors ${
             activeTab === 'regular'
-              ? 'border-emerald-600 text-emerald-700'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
+              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           Regular WhatsApp QR ({regularConnections.length})
@@ -282,8 +282,8 @@ export default function WhatsAppHubPage() {
           onClick={() => setActiveTab('templates')}
           className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors ${
             activeTab === 'templates'
-              ? 'border-emerald-600 text-emerald-700'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400'
+              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           Approved Templates ({templates.length})
@@ -294,10 +294,10 @@ export default function WhatsAppHubPage() {
       {activeTab === 'official' && (
         <div className="space-y-6">
           {officialConnections.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-              <ShieldCheck className="w-10 h-10 text-emerald-600 mx-auto mb-3" />
-              <h3 className="text-base font-semibold text-slate-900">No Official Meta Connection Configured</h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center">
+              <ShieldCheck className="w-10 h-10 text-emerald-600 dark:text-emerald-400 mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-slate-900 dark:text-white">No Official Meta Connection Configured</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
                 Connect your Meta WhatsApp Business Platform credentials (WABA ID, Phone ID, Access Token) to send pre-approved template messages.
               </p>
               <button
@@ -313,49 +313,49 @@ export default function WhatsAppHubPage() {
               {officialConnections.map((conn) => (
                 <div
                   key={conn._id}
-                  className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-4"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-2xs space-y-4"
                 >
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-900">{conn.name}</span>
+                        <span className="text-sm font-bold text-slate-900 dark:text-white">{conn.name}</span>
                         <span
                           className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold ${
                             conn.status === 'connected'
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
-                              : 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60'
+                              : 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/60'
                           }`}
                         >
                           {conn.status}
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500 mt-1 font-mono">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
                         Phone: {conn.phoneNumber || 'Not synced'}
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleDeleteConnection(conn._id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
                       title="Delete connection"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 dark:bg-slate-800/60 p-3 rounded-lg border border-slate-100 dark:border-slate-700">
                     <div>
-                      <span className="text-slate-400 block text-[10px] font-semibold uppercase">WABA ID</span>
-                      <span className="font-mono text-slate-700 text-[11px] truncate block">{conn.wabaId}</span>
+                      <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">WABA ID</span>
+                      <span className="font-mono text-slate-700 dark:text-slate-300 text-[11px] truncate block">{conn.wabaId}</span>
                     </div>
                     <div>
-                      <span className="text-slate-400 block text-[10px] font-semibold uppercase">Phone ID</span>
-                      <span className="font-mono text-slate-700 text-[11px] truncate block">{conn.phoneId}</span>
+                      <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Phone ID</span>
+                      <span className="font-mono text-slate-700 dark:text-slate-300 text-[11px] truncate block">{conn.phoneId}</span>
                     </div>
                   </div>
 
                   {conn.errorMessage && (
-                    <div className="p-2 rounded bg-rose-50 text-rose-700 text-xs font-medium">
+                    <div className="p-2 rounded bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 text-xs font-medium">
                       {conn.errorMessage}
                     </div>
                   )}
@@ -363,13 +363,13 @@ export default function WhatsAppHubPage() {
                   <div className="pt-2 flex items-center justify-between">
                     <button
                       onClick={() => handleSyncTemplates(conn._id)}
-                      className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1.5"
+                      className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-1.5"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
                       Sync Templates
                     </button>
 
-                    <span className="text-[11px] text-slate-400">
+                    <span className="text-[11px] text-slate-400 dark:text-slate-500">
                       API: {conn.apiVersion || 'v20.0'}
                     </span>
                   </div>
@@ -383,9 +383,9 @@ export default function WhatsAppHubPage() {
       {/* TAB 2: REGULAR WHATSAPP QR CONNECTIONS */}
       {activeTab === 'regular' && (
         <div className="space-y-6">
-          <div className="bg-amber-50/60 border border-amber-200/70 rounded-xl p-4 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-            <div className="text-xs text-amber-900 leading-relaxed">
+          <div className="bg-amber-50/60 dark:bg-amber-950/40 border border-amber-200/70 dark:border-amber-800/60 rounded-xl p-4 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
               <strong className="font-semibold">Independent QR Connection Adapter:</strong> Regular WhatsApp runs in an isolated socket session and does not use the official Meta Business Platform. Rate limits and safety throttles are enforced.
             </div>
           </div>
@@ -404,33 +404,33 @@ export default function WhatsAppHubPage() {
           {/* Modal Overlay for Active QR Session */}
           {activeQrSession && (
             <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-              <div className="bg-white border border-slate-200 rounded-3xl p-6 max-w-md w-full text-center space-y-4 shadow-2xl animate-in zoom-in-95">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full text-center space-y-4 shadow-2xl animate-in zoom-in-95">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-2.5 w-2.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                     </span>
-                    <span className="text-xs font-semibold text-emerald-700">
+                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                       {activeQrSession.qrCode ? 'Ready to Scan' : 'Connecting Baileys Socket...'}
                     </span>
                   </div>
                   <button
                     onClick={() => setActiveQrSession(null)}
-                    className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">Scan QR Code with WhatsApp</h3>
-                  <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Scan QR Code with WhatsApp</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto">
                     Open WhatsApp on your phone &gt; <strong>Linked Devices</strong> &gt; <strong>Link a Device</strong>.
                   </p>
                 </div>
 
-                <div className="p-4 bg-white border border-slate-200 rounded-2xl inline-block shadow-sm min-w-[280px] min-h-[280px] flex items-center justify-center">
+                <div className="p-4 bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-2xl inline-block shadow-sm min-w-[280px] min-h-[280px] flex items-center justify-center">
                   {activeQrSession.qrCode ? (
                     <img
                       src={activeQrSession.qrCode}
@@ -439,13 +439,13 @@ export default function WhatsAppHubPage() {
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-3 p-8">
-                      <RefreshCw className="w-8 h-8 text-emerald-600 animate-spin" />
-                      <p className="text-xs text-slate-500 font-medium">Connecting to WhatsApp Multi-Device...</p>
+                      <RefreshCw className="w-8 h-8 text-emerald-600 dark:text-emerald-400 animate-spin" />
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Connecting to WhatsApp Multi-Device...</p>
                     </div>
                   )}
                 </div>
 
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">
                   Status updates automatically in real time upon scanning.
                 </p>
 
@@ -453,14 +453,14 @@ export default function WhatsAppHubPage() {
                   <button
                     onClick={handleRefreshQr}
                     disabled={generatingQr}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 shadow-2xs transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 shadow-2xs transition-colors"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${generatingQr ? 'animate-spin' : ''}`} />
                     Refresh QR
                   </button>
                   <button
                     onClick={() => setActiveQrSession(null)}
-                    className="px-5 py-2 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                    className="px-5 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
                   >
                     Close
                   </button>
@@ -474,51 +474,51 @@ export default function WhatsAppHubPage() {
             {regularConnections.map((conn) => (
               <div
                 key={conn._id}
-                className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-4"
+                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-2xs space-y-4"
               >
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-slate-900">{conn.name}</span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{conn.name}</span>
                       <span
                         className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold ${
                           conn.status === 'connected'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60'
                             : conn.status === 'qr_ready'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200/60'
-                            : 'bg-slate-100 text-slate-600'
+                            ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/60'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
                         }`}
                       >
                         {conn.status}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1 font-mono">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-mono">
                       Phone: {conn.phoneNumber || 'Not paired'}
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleDeleteConnection(conn._id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors"
                     title="Delete connection"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="pt-2 flex items-center justify-between text-xs text-slate-400">
+                <div className="pt-2 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
                   <span>Linked: {conn.lastSeen ? new Date(conn.lastSeen).toLocaleDateString() : 'Never'}</span>
                   {conn.status !== 'connected' ? (
                     <button
                       onClick={() => handleOpenRegularQr(conn)}
                       disabled={generatingQr}
-                      className="inline-flex items-center gap-1 font-semibold text-emerald-600 hover:text-emerald-700"
+                      className="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700"
                     >
                       <QrCode className="w-3.5 h-3.5" />
                       View QR / Connect
                     </button>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                    <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       Active
                     </span>
@@ -534,10 +534,10 @@ export default function WhatsAppHubPage() {
       {activeTab === 'templates' && (
         <div className="space-y-6">
           {templates.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
-              <MessageSquare className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-              <h3 className="text-base font-semibold text-slate-900">No Templates Synchronized</h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center">
+              <MessageSquare className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-slate-900 dark:text-white">No Templates Synchronized</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
                 Sync templates from your Meta Business Platform connection to browse approved message formats.
               </p>
             </div>
@@ -548,36 +548,36 @@ export default function WhatsAppHubPage() {
                 return (
                   <div
                     key={tpl._id}
-                    className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs flex flex-col justify-between space-y-4"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-2xs flex flex-col justify-between space-y-4"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
-                        <span className="text-sm font-bold text-slate-900 truncate">{tpl.name}</span>
+                        <span className="text-sm font-bold text-slate-900 dark:text-white truncate">{tpl.name}</span>
                         <span
                           className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold ${
                             tpl.status === 'APPROVED'
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
-                              : 'bg-amber-50 text-amber-700 border border-amber-200/60'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60'
+                              : 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/60'
                           }`}
                         >
                           {tpl.status}
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-0.5 uppercase tracking-wide">
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 uppercase tracking-wide">
                         {tpl.category} • {tpl.language}
                       </div>
 
-                      <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-100 text-xs text-slate-700 leading-relaxed font-sans">
+                      <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-slate-100 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
                         {bodyComp?.text || '(No body text)'}
                       </div>
 
                       {tpl.variables && tpl.variables.length > 0 && (
                         <div className="mt-2 flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] font-semibold text-slate-400 uppercase">Variables:</span>
+                          <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase">Variables:</span>
                           {tpl.variables.map((v: string) => (
                             <span
                               key={v}
-                              className="px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-800 text-[10px] font-mono"
+                              className="px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[10px] font-mono"
                             >
                               &#123;&#123;{v}&#125;&#125;
                             </span>
@@ -586,10 +586,10 @@ export default function WhatsAppHubPage() {
                       )}
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-end">
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
                       <button
                         onClick={() => handleOpenTestSend(tpl)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/60 dark:border-emerald-800/60 transition-colors"
                       >
                         <Send className="w-3 h-3" />
                         Test Send
@@ -605,18 +605,18 @@ export default function WhatsAppHubPage() {
 
       {/* Add Official Meta Connection Modal */}
       {isAddOfficialModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-slate-900">Add Meta WhatsApp Business Connection</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white">Add Meta WhatsApp Business Connection</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Credentials are encrypted securely via AES-256-GCM.
                 </p>
               </div>
               <button
                 onClick={() => setIsAddOfficialModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -624,87 +624,87 @@ export default function WhatsAppHubPage() {
 
             <form onSubmit={handleCreateOfficial} className="p-6 space-y-4">
               {officialError && (
-                <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
+                <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/60 text-xs text-rose-700 dark:text-rose-300 font-medium">
                   {officialError}
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Connection Name</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Connection Name</label>
                 <input
                   type="text"
                   required
                   value={officialForm.name}
                   onChange={(e) => setOfficialForm({ ...officialForm, name: e.target.value })}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                   placeholder="Primary Business Line"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">WABA Account ID</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">WABA Account ID</label>
                   <input
                     type="text"
                     required
                     value={officialForm.wabaId}
                     onChange={(e) => setOfficialForm({ ...officialForm, wabaId: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                     placeholder="109238472910394"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number ID</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone Number ID</label>
                   <input
                     type="text"
                     required
                     value={officialForm.phoneId}
                     onChange={(e) => setOfficialForm({ ...officialForm, phoneId: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                     placeholder="102938475619283"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">System User Access Token</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">System User Access Token</label>
                 <input
                   type="password"
                   required
                   value={officialForm.accessToken}
                   onChange={(e) => setOfficialForm({ ...officialForm, accessToken: e.target.value })}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                   placeholder="EAABw..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">App Secret (HMAC Verification)</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">App Secret (HMAC Verification)</label>
                   <input
                     type="password"
                     value={officialForm.appSecret}
                     onChange={(e) => setOfficialForm({ ...officialForm, appSecret: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                     placeholder="Optional for signature check"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Webhook Verify Token</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Webhook Verify Token</label>
                   <input
                     type="text"
                     value={officialForm.webhookVerifyToken}
                     onChange={(e) => setOfficialForm({ ...officialForm, webhookVerifyToken: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                   />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsAddOfficialModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
                 >
                   Cancel
                 </button>
@@ -723,16 +723,16 @@ export default function WhatsAppHubPage() {
 
       {/* Test Send Template Modal */}
       {isTestSendModalOpen && selectedTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-slate-900">Test Send Template</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Template: {selectedTemplate.name}</p>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white">Test Send Template</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Template: {selectedTemplate.name}</p>
               </div>
               <button
                 onClick={() => setIsTestSendModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -743,8 +743,8 @@ export default function WhatsAppHubPage() {
                 <div
                   className={`p-3 rounded-lg text-xs font-medium ${
                     testSendResult.success
-                      ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
-                      : 'bg-rose-50 border border-rose-200 text-rose-700'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300'
+                      : 'bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300'
                   }`}
                 >
                   {testSendResult.message}
@@ -752,20 +752,20 @@ export default function WhatsAppHubPage() {
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Recipient Phone Number</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Recipient Phone Number</label>
                 <input
                   type="text"
                   required
                   value={testSendForm.recipientPhone}
                   onChange={(e) => setTestSendForm({ ...testSendForm, recipientPhone: e.target.value })}
                   placeholder="+15551234567"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                 />
               </div>
 
               {(selectedTemplate.variables || []).map((vNum: string) => (
                 <div key={vNum}>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Variable &#123;&#123;{vNum}&#125;&#125;
                   </label>
                   <input
@@ -779,16 +779,16 @@ export default function WhatsAppHubPage() {
                       })
                     }
                     placeholder={`Value for parameter ${vNum}`}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                   />
                 </div>
               ))}
 
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsTestSendModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
                 >
                   Cancel
                 </button>

@@ -18,11 +18,11 @@ html.dark {
   --theme-primary: #10b981;
   --theme-secondary: #38bdf8;
   --theme-accent: #a855f7;
-  --theme-bg: #090d16;
+  --theme-bg: #0b0f19;
   --theme-surface: #111827;
   --theme-text: #f8fafc;
   --theme-muted: #94a3b8;
-  --theme-border: #1f2937;
+  --theme-border: #1e293b;
   color-scheme: dark;
 }
 
@@ -31,6 +31,21 @@ html.dark {
     background-color: var(--theme-bg);
     color: var(--theme-text);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  html.dark h1,
+  html.dark h2,
+  html.dark h3,
+  html.dark h4,
+  html.dark h5,
+  html.dark h6 {
+    color: #f8fafc;
+  }
+
+  html.dark input,
+  html.dark textarea,
+  html.dark select {
+    color-scheme: dark;
   }
 }
 

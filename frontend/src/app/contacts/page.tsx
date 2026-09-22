@@ -379,12 +379,12 @@ export default function ContactsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">CRM Contacts</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">CRM Contacts</h1>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
               {total} Total
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Browse, manage, search, and initiate realistic direct communication with contacts stored in MongoDB Atlas.
           </p>
         </div>
@@ -393,28 +393,28 @@ export default function ContactsPage() {
           <button
             onClick={handleExportCsv}
             disabled={exporting || contacts.length === 0}
-            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-2xs disabled:opacity-50 transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs disabled:opacity-50 transition-colors"
             title="Download current contact filter as CSV"
           >
             {exporting ? (
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-slate-500" />
+              <RefreshCw className="w-3.5 h-3.5 animate-spin text-slate-500 dark:text-slate-400" />
             ) : (
-              <Download className="w-3.5 h-3.5 text-slate-600" />
+              <Download className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />
             )}
             Export CSV
           </button>
 
           <Link
             href="/contacts/import"
-            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-2xs transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs transition-colors"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             Import File
           </Link>
 
           <button
             onClick={handleOpenAdd}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Contact
@@ -423,7 +423,7 @@ export default function ContactsPage() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs space-y-3">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Main search bar */}
           <div className="relative flex-1 min-w-[280px] max-w-md">
@@ -436,7 +436,7 @@ export default function ContactsPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
             />
           </div>
 
@@ -449,7 +449,7 @@ export default function ContactsPage() {
                 setFilterStatus(e.target.value);
                 setPage(1);
               }}
-              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             >
               <option value="">All Statuses</option>
               <option value="lead">Lead</option>
@@ -468,7 +468,7 @@ export default function ContactsPage() {
                 setFilterDepartment(e.target.value);
                 setPage(1);
               }}
-              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 w-28 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 w-28 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
 
             {/* Owner */}
@@ -480,7 +480,7 @@ export default function ContactsPage() {
                 setFilterOwner(e.target.value);
                 setPage(1);
               }}
-              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
 
             {/* Lead Source */}
@@ -492,19 +492,19 @@ export default function ContactsPage() {
                 setFilterLeadSource(e.target.value);
                 setPage(1);
               }}
-              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="px-2.5 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
 
             {/* Custom Field Selector */}
             {customFields.length > 0 && (
-              <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
+              <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800/60 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                 <select
                   value={filterCustomKey}
                   onChange={(e) => {
                     setFilterCustomKey(e.target.value);
                     setPage(1);
                   }}
-                  className="px-2 py-1 text-xs bg-transparent text-slate-700 focus:outline-none"
+                  className="px-2 py-1 text-xs bg-transparent text-slate-700 dark:text-slate-200 focus:outline-none"
                 >
                   <option value="">Custom Field...</option>
                   {customFields.map((cf) => (
@@ -522,7 +522,7 @@ export default function ContactsPage() {
                       setFilterCustomVal(e.target.value);
                       setPage(1);
                     }}
-                    className="w-20 px-2 py-1 text-xs bg-white rounded border border-slate-200 focus:outline-none"
+                    className="w-20 px-2 py-1 text-xs bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 rounded border border-slate-200 dark:border-slate-700 focus:outline-none"
                   />
                 )}
               </div>
@@ -536,11 +536,11 @@ export default function ContactsPage() {
               }}
               className={`px-3 py-2 text-xs font-medium rounded-lg border flex items-center gap-1.5 transition-colors ${
                 hasDuplicatesOnly
-                  ? 'bg-amber-50 border-amber-300 text-amber-800 font-semibold'
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 font-semibold'
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
               }`}
             >
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               Duplicates Only
             </button>
 
@@ -548,7 +548,7 @@ export default function ContactsPage() {
             {selectedIds.length > 0 && (
               <button
                 onClick={handleDeleteBulk}
-                className="px-3 py-2 text-xs font-semibold rounded-lg bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 transition-colors flex items-center gap-1.5"
+                className="px-3 py-2 text-xs font-semibold rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors flex items-center gap-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 Delete Selected ({selectedIds.length})
@@ -559,7 +559,7 @@ export default function ContactsPage() {
       </div>
 
       {/* Contacts Table */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-2xs">
         {loading ? (
           <div className="p-16 text-center text-slate-400">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-emerald-600" />
@@ -567,9 +567,9 @@ export default function ContactsPage() {
           </div>
         ) : contacts.length === 0 ? (
           <div className="p-16 text-center">
-            <Users className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-sm font-semibold text-slate-800">No contacts found</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+            <Users className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">No contacts found</h3>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-sm mx-auto">
               Get started by uploading your contacts spreadsheet or adding individual records manually.
             </p>
             <div className="mt-4 flex justify-center gap-3">
@@ -581,7 +581,7 @@ export default function ContactsPage() {
               </Link>
               <button
                 onClick={handleOpenAdd}
-                className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
               >
                 Add Manually
               </button>
@@ -590,14 +590,14 @@ export default function ContactsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+              <thead className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="p-4 w-8">
                     <input
                       type="checkbox"
                       onChange={handleSelectAll}
                       checked={selectedIds.length === contacts.length && contacts.length > 0}
-                      className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                      className="rounded border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500 bg-white dark:bg-slate-950"
                     />
                   </th>
                   <th className="px-4 py-3">Contact Profile</th>
@@ -607,7 +607,7 @@ export default function ContactsPage() {
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {contacts.map((c) => {
                   const isSelected = selectedIds.includes(c._id);
                   const hasDuplicate = c.duplicateFlags && c.duplicateFlags.length > 0;
@@ -617,8 +617,8 @@ export default function ContactsPage() {
                   return (
                     <tr
                       key={c._id}
-                      className={`hover:bg-slate-50/70 transition-colors ${
-                        isSelected ? 'bg-emerald-50/40' : ''
+                      className={`hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-colors ${
+                        isSelected ? 'bg-emerald-50/40 dark:bg-emerald-950/30' : ''
                       }`}
                     >
                       <td className="p-4">
@@ -626,72 +626,72 @@ export default function ContactsPage() {
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => handleSelectRow(c._id)}
-                          className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                          className="rounded border-slate-300 dark:border-slate-700 text-emerald-600 focus:ring-emerald-500 bg-white dark:bg-slate-950"
                         />
                       </td>
 
                       {/* Name & Title */}
-                      <td className="px-4 py-3 font-medium text-slate-900">
+                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleOpenDetail(c._id)}
-                              className="text-left font-semibold text-slate-900 hover:text-emerald-700 hover:underline flex items-center gap-1.5"
+                              className="text-left font-semibold text-slate-900 dark:text-slate-100 hover:text-emerald-700 dark:hover:text-emerald-400 hover:underline flex items-center gap-1.5"
                             >
                               <span>{contactName}</span>
                             </button>
                             {hasDuplicate && (
                               <span
                                 title={`Duplicate detected for ${c.duplicateFlags.map((d: any) => d.field).join(', ')}`}
-                                className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-800 border border-amber-200"
+                                className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
                               >
                                 Duplicate
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-slate-500">
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400">
                             {c.designation || c.city ? (
                               <span>
                                 {[c.designation, c.city, c.country].filter(Boolean).join(' • ')}
                               </span>
                             ) : (
-                              <span className="text-slate-400">No title/location</span>
+                              <span className="text-slate-400 dark:text-slate-500">No title/location</span>
                             )}
                           </div>
                         </div>
                       </td>
 
                       {/* Communication Handles */}
-                      <td className="px-4 py-3 text-slate-600">
+                      <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
                         <div className="space-y-0.5">
                           {c.email ? (
-                            <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-700">
+                            <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-700 dark:text-slate-200">
                               <Mail className="w-3 h-3 text-slate-400 shrink-0" />
                               <span>{c.email}</span>
                             </div>
                           ) : (
-                            <div className="text-slate-400 italic text-[11px]">No email</div>
+                            <div className="text-slate-400 dark:text-slate-500 italic text-[11px]">No email</div>
                           )}
                           {c.phoneNumber || c.whatsappNumber ? (
-                            <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-600">
+                            <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-600 dark:text-slate-300">
                               <Phone className="w-3 h-3 text-slate-400 shrink-0" />
                               <span>{c.phoneNumber || c.whatsappNumber}</span>
                             </div>
                           ) : (
-                            <div className="text-slate-400 italic text-[11px]">No phone</div>
+                            <div className="text-slate-400 dark:text-slate-500 italic text-[11px]">No phone</div>
                           )}
                         </div>
                       </td>
 
                       {/* Organization & Department */}
-                      <td className="px-4 py-3 text-slate-600">
+                      <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
                         <div className="space-y-0.5">
-                          <div className="font-medium text-slate-800 flex items-center gap-1.5">
+                          <div className="font-medium text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                             <Building className="w-3 h-3 text-slate-400 shrink-0" />
                             <span>{c.company || '—'}</span>
                           </div>
                           {c.department && (
-                            <div className="text-[11px] text-slate-500 pl-4.5">
+                            <div className="text-[11px] text-slate-500 dark:text-slate-400 pl-4.5">
                               {c.department}
                             </div>
                           )}
@@ -709,7 +709,7 @@ export default function ContactsPage() {
                             {c.status || 'lead'}
                           </span>
                           {c.owner && (
-                            <div className="text-[11px] text-slate-500 flex items-center gap-1">
+                            <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
                               <User className="w-2.5 h-2.5 text-slate-400" />
                               <span>{c.owner}</span>
                             </div>
@@ -717,10 +717,9 @@ export default function ContactsPage() {
                         </div>
                       </td>
 
-                      {/* Actions: Exactly 3 Primary Buttons (WhatsApp, Email, Call) + Secondary */}
+                      {/* Actions */}
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          {/* THREE ACTION BUTTONS AT END OF EVERY ROW */}
                           <ContactActionButtons
                             contact={c}
                             onOpenEmail={(contact) => setEmailModalContact(contact)}
@@ -729,10 +728,10 @@ export default function ContactsPage() {
                           />
 
                           {/* Secondary options dropdown / icon buttons */}
-                          <div className="flex items-center border-l border-slate-200 pl-1.5 ml-1 gap-0.5">
+                          <div className="flex items-center border-l border-slate-200 dark:border-slate-800 pl-1.5 ml-1 gap-0.5">
                             <button
                               onClick={() => handleOpenDetail(c._id)}
-                              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                               title="View contact details"
                               aria-label="View contact details"
                             >
@@ -740,7 +739,7 @@ export default function ContactsPage() {
                             </button>
                             <button
                               onClick={() => handleOpenEdit(c)}
-                              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                               title="Edit contact"
                               aria-label="Edit contact"
                             >
@@ -748,7 +747,7 @@ export default function ContactsPage() {
                             </button>
                             <button
                               onClick={() => handleDeleteSingle(c._id)}
-                              className="p-1.5 rounded-md hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                               title="Delete contact"
                               aria-label="Delete contact"
                             >
@@ -766,26 +765,26 @@ export default function ContactsPage() {
         )}
 
         {/* Pagination Footer */}
-        <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <div>
-            Showing <span className="font-semibold text-slate-700">{contacts.length}</span> of{' '}
-            <span className="font-semibold text-slate-700">{total}</span> records
+            Showing <span className="font-semibold text-slate-700 dark:text-slate-200">{contacts.length}</span> of{' '}
+            <span className="font-semibold text-slate-700 dark:text-slate-200">{total}</span> records
           </div>
           <div className="flex items-center gap-2">
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="font-medium px-2 text-slate-700">
+            <span className="font-medium px-2 text-slate-700 dark:text-slate-200">
               Page {page} of {totalPages}
             </span>
             <button
               disabled={page >= totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -795,13 +794,13 @@ export default function ContactsPage() {
 
       {/* CONTACT DETAIL DRAWER / MODAL */}
       {detailContact && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
             {/* Detail Header with Actions */}
-            <div className="p-6 border-b border-slate-100 bg-slate-50/60 flex items-start justify-between">
+            <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/50 flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                     {detailContact.fullName || 'Contact Profile'}
                   </h3>
                   <span
@@ -812,7 +811,7 @@ export default function ContactsPage() {
                     {detailContact.status || 'lead'}
                   </span>
                 </div>
-                <div className="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-2">
                   <span>
                     {[detailContact.designation, detailContact.company, detailContact.department]
                       .filter(Boolean)
@@ -836,7 +835,7 @@ export default function ContactsPage() {
 
                 <button
                   onClick={() => setDetailContact(null)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                  className="p-2 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -847,90 +846,90 @@ export default function ContactsPage() {
             <div className="p-6 space-y-5 overflow-y-auto flex-1 text-xs">
               {/* Duplicate Warning */}
               {detailContact.duplicateFlags && detailContact.duplicateFlags.length > 0 && (
-                <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
-                  <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
-                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-bold text-amber-900 dark:text-amber-200">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                     Duplicate Match Detected
                   </div>
-                  <p className="text-xs text-amber-800 leading-relaxed">
+                  <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
                     This contact shares matching credentials ({detailContact.duplicateFlags.map((d: any) => d.field).join(', ')}) with an existing contact in the database.
                   </p>
                 </div>
               )}
 
               {/* Contact Information Card */}
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-3">
-                <div className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-slate-600" />
+              <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+                <div className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                   Contact Information
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Email</span>
-                    <span className="text-slate-800 font-medium font-mono text-[11px]">{detailContact.email || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Email</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium font-mono text-[11px]">{detailContact.email || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Alternate Email</span>
-                    <span className="text-slate-800 font-medium font-mono text-[11px]">{detailContact.alternateEmail || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Alternate Email</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium font-mono text-[11px]">{detailContact.alternateEmail || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Phone Number</span>
-                    <span className="text-slate-800 font-mono text-[11px]">{detailContact.phoneNumber || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Phone Number</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-mono text-[11px]">{detailContact.phoneNumber || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">WhatsApp Number</span>
-                    <span className="text-slate-800 font-mono text-[11px]">{detailContact.whatsappNumber || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">WhatsApp Number</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-mono text-[11px]">{detailContact.whatsappNumber || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Company</span>
-                    <span className="text-slate-800 font-medium">{detailContact.company || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Company</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{detailContact.company || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Department</span>
-                    <span className="text-slate-800 font-medium">{detailContact.department || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Department</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{detailContact.department || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Designation</span>
-                    <span className="text-slate-800 font-medium">{detailContact.designation || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Designation</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{detailContact.designation || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Location</span>
-                    <span className="text-slate-800 font-medium">
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Location</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">
                       {[detailContact.city, detailContact.country].filter(Boolean).join(', ') || '—'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Website</span>
-                    <span className="text-slate-800 font-medium">{detailContact.website || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Website</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{detailContact.website || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Owner</span>
-                    <span className="text-slate-800 font-medium">{detailContact.owner || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Owner</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{detailContact.owner || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Lead Source</span>
-                    <span className="text-slate-800 font-medium">{detailContact.leadSource || '—'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Lead Source</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{detailContact.leadSource || '—'}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase">Tenant Org</span>
-                    <span className="text-slate-800 font-mono text-[11px]">{detailContact.organizationId || 'default-org'}</span>
+                    <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">Tenant Org</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-mono text-[11px]">{detailContact.organizationId || 'default-org'}</span>
                   </div>
                 </div>
               </div>
 
               {/* Tags */}
               {detailContact.tags && detailContact.tags.length > 0 && (
-                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2">
-                  <div className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Tag className="w-3.5 h-3.5 text-slate-600" />
+                <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                     Tags
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {detailContact.tags.map((t: string) => (
                       <span
                         key={t}
-                        className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-200/80 text-slate-800"
+                        className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-200/80 dark:bg-slate-700 text-slate-800 dark:text-slate-200"
                       >
                         {t}
                       </span>
@@ -941,26 +940,26 @@ export default function ContactsPage() {
 
               {/* Notes */}
               {detailContact.notes && (
-                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-2">
-                  <div className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <FileText className="w-3.5 h-3.5 text-slate-600" />
+                <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                     Notes
                   </div>
-                  <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{detailContact.notes}</p>
+                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{detailContact.notes}</p>
                 </div>
               )}
 
               {/* Dynamic Custom Fields */}
               {detailContact.customFields && Object.keys(detailContact.customFields).length > 0 && (
-                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-3">
-                  <div className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+                  <div className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
                     Custom Attributes
                   </div>
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     {Object.entries(detailContact.customFields).map(([k, v]) => (
                       <div key={k}>
-                        <span className="text-slate-400 block text-[10px] font-semibold uppercase">{k}</span>
-                        <span className="text-slate-800 font-medium">{String(v || '—')}</span>
+                        <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-semibold uppercase">{k}</span>
+                        <span className="text-slate-800 dark:text-slate-200 font-medium">{String(v || '—')}</span>
                       </div>
                     ))}
                   </div>
@@ -968,9 +967,9 @@ export default function ContactsPage() {
               )}
 
               {/* Linked CRM Activity Timeline */}
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-3">
-                <div className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-slate-600" />
+              <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200/80 dark:border-slate-700/60 space-y-3">
+                <div className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                   Recent Activity Timeline
                 </div>
 
@@ -980,22 +979,22 @@ export default function ContactsPage() {
                     Loading activities...
                   </div>
                 ) : detailActivities.length === 0 ? (
-                  <div className="text-slate-400 text-xs py-1">No recorded CRM activities for this contact yet.</div>
+                  <div className="text-slate-400 dark:text-slate-500 text-xs py-1">No recorded CRM activities for this contact yet.</div>
                 ) : (
                   <div className="space-y-2.5">
                     {detailActivities.map((act) => (
                       <div
                         key={act._id}
-                        className="p-2.5 rounded-lg bg-white border border-slate-200/60 space-y-1"
+                        className="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700 space-y-1"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-slate-800">{act.title}</span>
-                          <span className="text-[10px] text-slate-400">
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">{act.title}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500">
                             {act.performedAt ? new Date(act.performedAt).toLocaleDateString() : ''}
                           </span>
                         </div>
                         {act.description && (
-                          <div className="text-slate-600 text-[11px]">{act.description}</div>
+                          <div className="text-slate-600 dark:text-slate-300 text-[11px]">{act.description}</div>
                         )}
                       </div>
                     ))}
@@ -1005,7 +1004,7 @@ export default function ContactsPage() {
             </div>
 
             {/* Footer Buttons */}
-            <div className="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/60">
+            <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-800/50">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
@@ -1013,14 +1012,14 @@ export default function ContactsPage() {
                     setDetailContact(null);
                     handleOpenEdit(toEdit);
                   }}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-colors"
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                   Edit Profile
                 </button>
                 <button
                   onClick={() => handleDeleteSingle(detailContact._id)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Delete
@@ -1029,7 +1028,7 @@ export default function ContactsPage() {
 
               <button
                 onClick={() => setDetailContact(null)}
-                className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 text-slate-700 hover:bg-slate-300 transition-colors"
+                className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
               >
                 Close
               </button>
@@ -1040,20 +1039,20 @@ export default function ContactsPage() {
 
       {/* ADD / EDIT CONTACT MODAL */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+            <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-800/50">
               <div>
-                <h3 className="text-base font-bold text-slate-900">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
                   {editingContact ? 'Edit Contact Profile' : 'Add New CRM Contact'}
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Enter audience profile details, communication endpoints, and company attributes.
                 </p>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1061,7 +1060,7 @@ export default function ContactsPage() {
 
             <form onSubmit={handleSubmitForm} className="p-6 space-y-4 overflow-y-auto flex-1 text-xs">
               {formError && (
-                <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
+                <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-medium">
                   {formError}
                 </div>
               )}
@@ -1069,22 +1068,22 @@ export default function ContactsPage() {
               {/* Name Section */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">First Name</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">First Name</label>
                   <input
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="John"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Last Name</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Last Name</label>
                   <input
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="Doe"
                   />
                 </div>
@@ -1093,22 +1092,22 @@ export default function ContactsPage() {
               {/* Communication Endpoints */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Primary Email</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Primary Email</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="john@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Alternate Email</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Alternate Email</label>
                   <input
                     type="email"
                     value={formData.alternateEmail}
                     onChange={(e) => setFormData({ ...formData, alternateEmail: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="john.work@example.com"
                   />
                 </div>
@@ -1116,26 +1115,26 @@ export default function ContactsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Mobile Phone (For Calls)
                   </label>
                   <input
                     type="text"
                     value={formData.phoneNumber}
                     onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     WhatsApp Number
                   </label>
                   <input
                     type="text"
                     value={formData.whatsappNumber}
                     onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-mono"
                     placeholder="+1 (555) 123-4567 (if different)"
                   />
                 </div>
@@ -1144,32 +1143,32 @@ export default function ContactsPage() {
               {/* Organization, Department, Role */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Company</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Company</label>
                   <input
                     type="text"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="Acme Inc."
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Department</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Department</label>
                   <input
                     type="text"
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="Engineering / Sales"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Designation</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Designation</label>
                   <input
                     type="text"
                     value={formData.designation}
                     onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="Director of Sales"
                   />
                 </div>
@@ -1178,11 +1177,11 @@ export default function ContactsPage() {
               {/* Status, Owner, Lead Source */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Status</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-semibold"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none font-semibold"
                   >
                     <option value="lead">Lead</option>
                     <option value="prospect">Prospect</option>
@@ -1192,22 +1191,22 @@ export default function ContactsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Owner</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Owner</label>
                   <input
                     type="text"
                     value={formData.owner}
                     onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="Sales Rep Name"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Lead Source</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Lead Source</label>
                   <input
                     type="text"
                     value={formData.leadSource}
                     onChange={(e) => setFormData({ ...formData, leadSource: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
                     placeholder="Website / Referral"
                   />
                 </div>
@@ -1216,32 +1215,32 @@ export default function ContactsPage() {
               {/* Location & Website */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">City</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">City</label>
                   <input
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                     placeholder="San Francisco"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Country</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Country</label>
                   <input
                     type="text"
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                     placeholder="United States"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Website</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Website</label>
                   <input
                     type="text"
                     value={formData.website}
                     onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                     placeholder="https://example.com"
                   />
                 </div>
@@ -1249,38 +1248,38 @@ export default function ContactsPage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Tags (comma-separated)
                 </label>
                 <input
                   type="text"
                   value={formData.tags}
                   onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                   placeholder="VIP, Enterprise, Automotive"
                 />
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Notes</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Notes</label>
                 <textarea
                   rows={3}
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none resize-y"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none resize-y"
                   placeholder="Key background context, preferences, call notes..."
                 />
               </div>
 
               {/* Dynamic Custom Fields */}
               {customFields.length > 0 && (
-                <div className="pt-2 border-t border-slate-100 space-y-2">
-                  <div className="text-xs font-semibold text-slate-700">Custom Attributes</div>
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                  <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">Custom Attributes</div>
                   <div className="grid grid-cols-2 gap-3">
                     {customFields.map((cf) => (
                       <div key={cf.key}>
-                        <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                        <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
                           {cf.label}
                         </label>
                         <input
@@ -1295,7 +1294,7 @@ export default function ContactsPage() {
                               },
                             })
                           }
-                          className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                          className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
                         />
                       </div>
                     ))}
@@ -1304,11 +1303,11 @@ export default function ContactsPage() {
               )}
 
               {/* Modal Footer */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50/60 p-4 -mx-6 -mb-6">
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3 bg-slate-50/60 dark:bg-slate-800/50 p-4 -mx-6 -mb-6">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="px-4 py-2 text-xs font-semibold rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   Cancel
                 </button>

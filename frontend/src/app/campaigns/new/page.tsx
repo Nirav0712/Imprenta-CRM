@@ -211,14 +211,14 @@ export default function NewCampaignWizardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Campaign Builder</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Campaign Builder</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             Configure broadcast channels, audience filters, rotation strategies, and policy throttles.
           </p>
         </div>
         <Link
           href="/campaigns"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-2xs transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to Campaigns
@@ -226,7 +226,7 @@ export default function NewCampaignWizardPage() {
       </div>
 
       {/* Stepper Progress */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs">
         <div className="flex items-center justify-between text-xs font-semibold">
           {[
             { num: 1, label: 'Channel & Name' },
@@ -238,70 +238,70 @@ export default function NewCampaignWizardPage() {
             <React.Fragment key={s.num}>
               <div
                 className={`flex items-center gap-2 ${
-                  step >= s.num ? 'text-emerald-700' : 'text-slate-400'
+                  step >= s.num ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500'
                 }`}
               >
                 <span
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] ${
-                    step >= s.num ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500'
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold ${
+                    step >= s.num ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                   }`}
                 >
                   {s.num}
                 </span>
                 <span className="hidden sm:inline">{s.label}</span>
               </div>
-              {idx < arr.length - 1 && <ChevronRight className="w-4 h-4 text-slate-300" />}
+              {idx < arr.length - 1 && <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-700" />}
             </React.Fragment>
           ))}
         </div>
       </div>
 
       {formError && (
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
+        <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/60 text-xs text-rose-700 dark:text-rose-300 font-medium">
           {formError}
         </div>
       )}
 
       {/* STEP 1: CHANNEL & CAMPAIGN NAME */}
       {step === 1 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xs space-y-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-2xs space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Campaign Channel & Name</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Campaign Channel & Name</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Choose the delivery channel and give your campaign a recognizable identifier.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Campaign Name</label>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Campaign Name</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Product Launch Announcement - Q3"
-              className="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              className="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-2">Select Channel</label>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">Select Channel</label>
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
                 onClick={() => setChannel('whatsapp')}
                 className={`p-5 rounded-2xl border-2 text-left transition-all flex items-start gap-4 ${
                   channel === 'whatsapp'
-                    ? 'border-emerald-500 bg-emerald-50/40 shadow-xs'
-                    : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/40 shadow-xs'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-850'
                 }`}
               >
-                <div className="p-3 rounded-xl bg-emerald-100 text-emerald-800">
+                <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">
                   <MessageSquare className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-slate-900">WhatsApp Broadcast</div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">WhatsApp Broadcast</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                     Send verified Meta templates or direct messages to customer phone numbers.
                   </div>
                 </div>
@@ -312,16 +312,16 @@ export default function NewCampaignWizardPage() {
                 onClick={() => setChannel('email')}
                 className={`p-5 rounded-2xl border-2 text-left transition-all flex items-start gap-4 ${
                   channel === 'email'
-                    ? 'border-emerald-500 bg-emerald-50/40 shadow-xs'
-                    : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/40 shadow-xs'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-850'
                 }`}
               >
-                <div className="p-3 rounded-xl bg-blue-100 text-blue-800">
+                <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300">
                   <Mail className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-slate-900">Email Campaign</div>
-                  <div className="text-xs text-slate-500 mt-1">
+                  <div className="text-sm font-bold text-slate-900 dark:text-white">Email Campaign</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                     Rotate across multiple SMTP accounts with hourly quotas and variable substitution.
                   </div>
                 </div>
@@ -329,7 +329,7 @@ export default function NewCampaignWizardPage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-slate-100">
+          <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               onClick={() => {
                 if (!name.trim()) {
@@ -349,17 +349,17 @@ export default function NewCampaignWizardPage() {
 
       {/* STEP 2: AUDIENCE FILTER */}
       {step === 2 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xs space-y-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-2xs space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-slate-900">Audience Segmentation</h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">Audience Segmentation</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Target specific contact cohorts using dynamic demographic and lead criteria.
               </p>
             </div>
-            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-right">
-              <span className="text-[10px] uppercase font-bold text-emerald-600 block">Matched Audience</span>
-              <span className="text-lg font-bold text-emerald-900">
+            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-right">
+              <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 block">Matched Audience</span>
+              <span className="text-lg font-bold text-emerald-900 dark:text-emerald-300">
                 {countingContacts ? 'Calculating...' : `${(previewContactCount || 0).toLocaleString()} contacts`}
               </span>
             </div>
@@ -367,54 +367,54 @@ export default function NewCampaignWizardPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">City Filter</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">City Filter</label>
               <input
                 type="text"
                 value={filterCity}
                 onChange={(e) => setFilterCity(e.target.value)}
                 placeholder="e.g. New York, London"
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Country Filter</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Country Filter</label>
               <input
                 type="text"
                 value={filterCountry}
                 onChange={(e) => setFilterCountry(e.target.value)}
                 placeholder="e.g. United States, Germany"
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Lead Source</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Lead Source</label>
               <input
                 type="text"
                 value={filterLeadSource}
                 onChange={(e) => setFilterLeadSource(e.target.value)}
                 placeholder="e.g. Inbound, Website, Conference"
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Company / Organization</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Company / Organization</label>
               <input
                 type="text"
                 value={filterCompany}
                 onChange={(e) => setFilterCompany(e.target.value)}
                 placeholder="e.g. Acme"
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               onClick={() => setStep(1)}
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
             >
               Back
             </button>
@@ -436,12 +436,12 @@ export default function NewCampaignWizardPage() {
 
       {/* STEP 3: SENDER ACCOUNTS & ROTATION */}
       {step === 3 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xs space-y-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-2xs space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">
               {channel === 'whatsapp' ? 'Select WhatsApp Connection' : 'Select Email Senders & Rotation'}
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {channel === 'whatsapp'
                 ? 'Select the active connection to dispatch this campaign from.'
                 : 'Select one or more active email accounts. The queue scheduler will rotate sending across selected accounts.'}
@@ -450,7 +450,7 @@ export default function NewCampaignWizardPage() {
 
           {channel === 'whatsapp' ? (
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-2">WhatsApp Connection</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">WhatsApp Connection</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {whatsappConnections.map((c) => (
                   <button
@@ -459,13 +459,13 @@ export default function NewCampaignWizardPage() {
                     onClick={() => setSelectedWaConnectionId(c._id)}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       selectedWaConnectionId === c._id
-                        ? 'border-emerald-500 bg-emerald-50/50 shadow-xs'
-                        : 'border-slate-200 hover:bg-slate-50'
+                        ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 shadow-xs'
+                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-slate-850'
                     }`}
                   >
-                    <div className="font-bold text-xs text-slate-900">{c.name}</div>
-                    <div className="text-[11px] text-slate-500 font-mono mt-0.5">{c.phoneNumber || 'Not synced'}</div>
-                    <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-slate-100 text-slate-700">
+                    <div className="font-bold text-xs text-slate-900 dark:text-white">{c.name}</div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">{c.phoneNumber || 'Not synced'}</div>
+                    <span className="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                       {c.providerType === 'official_meta' ? 'Official Meta API' : 'Regular QR'}
                     </span>
                   </button>
@@ -475,7 +475,7 @@ export default function NewCampaignWizardPage() {
           ) : (
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-2">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
                   Select Sending Accounts (Multi-Account Rotation)
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -488,22 +488,22 @@ export default function NewCampaignWizardPage() {
                         onClick={() => handleToggleEmailAccount(a._id)}
                         className={`p-4 rounded-xl border text-left transition-all ${
                           isSelected
-                            ? 'border-emerald-500 bg-emerald-50/50 shadow-xs'
-                            : 'border-slate-200 hover:bg-slate-50'
+                            ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/40 shadow-xs'
+                            : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-slate-850'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-slate-900">{a.name}</span>
+                          <span className="font-bold text-xs text-slate-900 dark:text-white">{a.name}</span>
                           <span
                             className={`w-4 h-4 rounded-full border flex items-center justify-center text-[10px] ${
-                              isSelected ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300'
+                              isSelected ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300 dark:border-slate-600'
                             }`}
                           >
                             {isSelected && '✓'}
                           </span>
                         </div>
-                        <div className="text-[11px] text-slate-500 font-mono mt-0.5">{a.emailAddress}</div>
-                        <div className="text-[10px] text-slate-400 mt-1">
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">{a.emailAddress}</div>
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
                           Daily Quota: {a.sentTodayCount || 0} / {a.dailyLimit}
                         </div>
                       </button>
@@ -513,11 +513,11 @@ export default function NewCampaignWizardPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Rotation Strategy</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Rotation Strategy</label>
                 <select
                   value={rotationStrategy}
                   onChange={(e) => setRotationStrategy(e.target.value as any)}
-                  className="px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-800"
+                  className="px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                 >
                   <option value="round_robin">Round Robin (Distribute evenly per email)</option>
                   <option value="least_used">Least Used (Prioritize accounts with lowest daily quota)</option>
@@ -526,10 +526,10 @@ export default function NewCampaignWizardPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               onClick={() => setStep(2)}
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
             >
               Back
             </button>
@@ -545,10 +545,10 @@ export default function NewCampaignWizardPage() {
 
       {/* STEP 4: CONTENT & VARIABLE MAPPING */}
       {step === 4 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xs space-y-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-2xs space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Message Content & Variable Mapping</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Message Content & Variable Mapping</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Personalize messaging parameters using contact attributes like full name, company, or custom fields.
             </p>
           </div>
@@ -558,7 +558,7 @@ export default function NewCampaignWizardPage() {
               {templates.length > 0 ? (
                 <>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                       Select Approved Meta Template
                     </label>
                     <select
@@ -567,7 +567,7 @@ export default function NewCampaignWizardPage() {
                         const tpl = templates.find((t) => t.name === e.target.value);
                         if (tpl) handleSelectTemplate(tpl);
                       }}
-                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 focus:outline-none"
+                      className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none"
                     >
                       {templates.map((t) => (
                         <option key={t._id} value={t.name}>
@@ -578,18 +578,18 @@ export default function NewCampaignWizardPage() {
                   </div>
 
                   {selectedTemplate && (
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                      <div className="text-xs font-bold text-slate-800">Template Body Preview:</div>
-                      <div className="text-xs text-slate-600 leading-relaxed font-sans">
+                    <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                      <div className="text-xs font-bold text-slate-800 dark:text-slate-200">Template Body Preview:</div>
+                      <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
                         {selectedTemplate.components?.find((c: any) => c.type === 'BODY')?.text || '(No body)'}
                       </div>
 
                       {selectedTemplate.variables && selectedTemplate.variables.length > 0 && (
-                        <div className="pt-3 border-t border-slate-200 space-y-2">
-                          <div className="text-xs font-semibold text-slate-800">Map Parameters:</div>
+                        <div className="pt-3 border-t border-slate-200 dark:border-slate-700 space-y-2">
+                          <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">Map Parameters:</div>
                           {selectedTemplate.variables.map((vNum: string) => (
                             <div key={vNum} className="flex items-center gap-3">
-                              <span className="text-xs font-mono font-semibold text-slate-700 w-24">
+                              <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 w-24">
                                 Variable &#123;&#123;{vNum}&#125;&#125; →
                               </span>
                               <select
@@ -600,7 +600,7 @@ export default function NewCampaignWizardPage() {
                                     [vNum]: e.target.value,
                                   })
                                 }
-                                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white"
+                                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                               >
                                 <option value="firstName">First Name</option>
                                 <option value="fullName">Full Name</option>
@@ -617,7 +617,7 @@ export default function NewCampaignWizardPage() {
                 </>
               ) : (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     WhatsApp Message Text (Supports &#123;&#123;firstName&#125;&#125;, &#123;&#123;company&#125;&#125;)
                   </label>
                   <textarea
@@ -625,7 +625,7 @@ export default function NewCampaignWizardPage() {
                     value={regularWaBody}
                     onChange={(e) => setRegularWaBody(e.target.value)}
                     placeholder="Hello {{firstName}}, we have an update regarding {{company}}..."
-                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none"
                   />
                 </div>
               )}
@@ -633,7 +633,7 @@ export default function NewCampaignWizardPage() {
           ) : (
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Email Subject Line (Supports &#123;&#123;firstName&#125;&#125;, &#123;&#123;company&#125;&#125;)
                 </label>
                 <input
@@ -642,12 +642,12 @@ export default function NewCampaignWizardPage() {
                   value={emailSubject}
                   onChange={(e) => setEmailSubject(e.target.value)}
                   placeholder="Special Announcement for {{company}}"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Email HTML Body (Supports HTML and &#123;&#123;firstName&#125;&#125;, &#123;&#123;company&#125;&#125;)
                 </label>
                 <textarea
@@ -656,16 +656,16 @@ export default function NewCampaignWizardPage() {
                   value={emailBodyHtml}
                   onChange={(e) => setEmailBodyHtml(e.target.value)}
                   placeholder="<p>Hi {{firstName}},</p><p>We wanted to share an exciting update for {{company}}.</p>"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 font-mono text-xs focus:outline-none"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-mono text-xs focus:outline-none"
                 />
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               onClick={() => setStep(3)}
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
             >
               Back
             </button>
@@ -681,17 +681,17 @@ export default function NewCampaignWizardPage() {
 
       {/* STEP 5: SENDING POLICY & CONFIRMATION */}
       {step === 5 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-2xs space-y-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-2xs space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Sending Policy & Launch Review</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">Sending Policy & Launch Review</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Fine-tune inter-message delay and batch intervals before queuing the durable campaign.
             </p>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Delay Between Messages (Sec)
               </label>
               <input
@@ -700,47 +700,47 @@ export default function NewCampaignWizardPage() {
                 max={60}
                 value={perMessageDelaySec}
                 onChange={(e) => setPerMessageDelaySec(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Batch Size</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Batch Size</label>
               <input
                 type="number"
                 min={1}
                 max={500}
                 value={batchSize}
                 onChange={(e) => setBatchSize(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">Batch Pause (Sec)</label>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Batch Pause (Sec)</label>
               <input
                 type="number"
                 min={0}
                 value={batchPauseSec}
                 onChange={(e) => setBatchPauseSec(parseInt(e.target.value, 10))}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Review Summary */}
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs text-slate-700">
-            <div className="font-bold text-slate-900">Campaign Summary</div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs text-slate-700 dark:text-slate-300">
+            <div className="font-bold text-slate-900 dark:text-white">Campaign Summary</div>
             <div className="grid grid-cols-2 gap-2">
-              <div>Name: <strong className="text-slate-800">{name}</strong></div>
-              <div>Channel: <strong className="capitalize text-slate-800">{channel}</strong></div>
-              <div>Total Recipients: <strong className="text-emerald-700 font-mono">{(previewContactCount || 0).toLocaleString()}</strong></div>
-              <div>Per-message delay: <strong className="text-slate-800">{perMessageDelaySec}s</strong></div>
+              <div>Name: <strong className="text-slate-800 dark:text-slate-200">{name}</strong></div>
+              <div>Channel: <strong className="capitalize text-slate-800 dark:text-slate-200">{channel}</strong></div>
+              <div>Total Recipients: <strong className="text-emerald-700 dark:text-emerald-400 font-mono">{(previewContactCount || 0).toLocaleString()}</strong></div>
+              <div>Per-message delay: <strong className="text-slate-800 dark:text-slate-200">{perMessageDelaySec}s</strong></div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
             <button
               onClick={() => setStep(4)}
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200"
+              className="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors"
             >
               Back
             </button>

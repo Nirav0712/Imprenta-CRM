@@ -134,19 +134,19 @@ export function EmailComposeModal({
     contact.fullName?.trim() || `${contact.email || 'Contact'}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
-      <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-150">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 w-full max-w-xl overflow-hidden animate-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+        <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-800/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200/80 flex items-center justify-center text-blue-600">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400">
               <Mail className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
                 Compose Email to {contactName}
               </h3>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 Draft and send through your connected email account or open in default mail client.
               </p>
             </div>
@@ -154,7 +154,7 @@ export function EmailComposeModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -163,7 +163,7 @@ export function EmailComposeModal({
         {/* Form Body */}
         <form onSubmit={handleSendSmtp} className="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
           {errorMsg && (
-            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium flex items-start gap-2">
+            <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 font-medium flex items-start gap-2">
               <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
@@ -172,13 +172,13 @@ export function EmailComposeModal({
           {/* Account Selector */}
           {accounts.length > 0 ? (
             <div>
-              <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+              <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 From Account (SMTP)
               </label>
               <select
                 value={selectedAccountId}
                 onChange={(e) => setSelectedAccountId(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none"
+                className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none"
               >
                 {accounts.map((acc) => (
                   <option key={acc._id} value={acc._id}>
@@ -189,12 +189,12 @@ export function EmailComposeModal({
               </select>
             </div>
           ) : (
-            <div className="p-2.5 rounded-lg bg-amber-50/80 border border-amber-200 text-[11px] text-amber-800 flex items-center justify-between">
+            <div className="p-2.5 rounded-lg bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-300 flex items-center justify-between">
               <span>No connected SMTP email account found. You can use your device's default email client.</span>
               <button
                 type="button"
                 onClick={handleOpenMailto}
-                className="ml-2 font-semibold text-amber-900 underline hover:text-amber-700 inline-flex items-center gap-1 shrink-0"
+                className="ml-2 font-semibold text-amber-900 dark:text-amber-200 underline hover:text-amber-700 inline-flex items-center gap-1 shrink-0"
               >
                 <ExternalLink className="w-3 h-3" />
                 Launch Mail Client
@@ -205,11 +205,11 @@ export function EmailComposeModal({
           {/* Recipient */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-[11px] font-semibold text-slate-700">To Recipient</label>
+              <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300">To Recipient</label>
               <button
                 type="button"
                 onClick={() => setShowCcBcc(!showCcBcc)}
-                className="text-[10px] font-semibold text-blue-600 hover:text-blue-800"
+                className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
               >
                 {showCcBcc ? 'Hide CC/BCC' : 'Add CC / BCC'}
               </button>
@@ -219,31 +219,31 @@ export function EmailComposeModal({
               required
               value={toEmail}
               onChange={(e) => setToEmail(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none font-mono"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none font-mono placeholder-slate-400 dark:placeholder-slate-500"
               placeholder="recipient@example.com"
             />
           </div>
 
           {/* Optional CC / BCC */}
           {showCcBcc && (
-            <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200/60">
+            <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-700">
               <div>
-                <label className="block text-[10px] font-semibold text-slate-600 mb-1">CC</label>
+                <label className="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">CC</label>
                 <input
                   type="text"
                   value={ccEmail}
                   onChange={(e) => setCcEmail(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs rounded border border-slate-200 bg-white focus:outline-none"
+                  className="w-full px-2.5 py-1.5 text-xs rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500"
                   placeholder="cc@example.com"
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-slate-600 mb-1">BCC</label>
+                <label className="block text-[10px] font-semibold text-slate-600 dark:text-slate-400 mb-1">BCC</label>
                 <input
                   type="text"
                   value={bccEmail}
                   onChange={(e) => setBccEmail(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs rounded border border-slate-200 bg-white focus:outline-none"
+                  className="w-full px-2.5 py-1.5 text-xs rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500"
                   placeholder="bcc@example.com"
                 />
               </div>
@@ -252,39 +252,39 @@ export function EmailComposeModal({
 
           {/* Subject */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-700 mb-1">Subject</label>
+            <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Subject</label>
             <input
               type="text"
               required
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none placeholder-slate-400 dark:placeholder-slate-500"
               placeholder="e.g. Follow-up regarding our discussion..."
             />
           </div>
 
           {/* Body */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-700 mb-1">Message Body</label>
+            <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Message Body</label>
             <textarea
               required
               rows={6}
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-y leading-relaxed"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none resize-y leading-relaxed placeholder-slate-400 dark:placeholder-slate-500"
               placeholder="Type your email content here..."
             />
           </div>
 
           {/* Footer Actions */}
-          <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
             <button
               type="button"
               onClick={handleOpenMailto}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
               title="Open draft in system default email application (Thunderbird, Outlook, Apple Mail)"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+              <ExternalLink className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
               Open in Default Mail Client
             </button>
 
@@ -292,7 +292,7 @@ export function EmailComposeModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
                 Cancel
               </button>
