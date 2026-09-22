@@ -42,6 +42,18 @@ export class WhatsAppService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (this.connectionModel?.db?.readyState !== 1) {
+      this.connectionModel?.db?.once('connected', () => {
+        this.restoreSessions().catch((err) => {
+          this.logger.warn(`Error during deferred WhatsApp session restore: ${err.message}`);
+        });
+      });
+      return;
+    }
+    await this.restoreSessions();
+  }
+
+  private async restoreSessions() {
     try {
       const regularConnections = await this.connectionModel.find({
         providerType: 'regular_qr',
@@ -58,7 +70,7 @@ export class WhatsAppService implements OnModuleInit {
         }
       }
     } catch (err: any) {
-      this.logger.warn(`Error during WhatsAppService onModuleInit: ${err.message}`);
+      this.logger.warn(`Error during WhatsAppService session restore: ${err.message}`);
     }
   }
 

@@ -71,7 +71,12 @@ const logger = new Logger('DatabaseModule');
               logger.log(`[MongoDB] Successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);
             });
             connection.on('error', (err: any) => {
-              logger.error(`[MongoDB] Connection error: ${err?.message || err}`);
+              const msg = err?.message || String(err);
+              if (msg.includes('alert 80') || msg.includes('tlsv1 alert') || msg.includes('SSL alert')) {
+                logger.error(`[MongoDB TLS/SSL Error] Handshake rejected by MongoDB Atlas (${msg}). Possible cause: Hostinger outbound IP is not allowed in MongoDB Atlas Network Access, or cluster is paused.`);
+              } else {
+                logger.error(`[MongoDB] Connection error: ${msg}`);
+              }
             });
             connection.on('disconnected', () => {
               logger.warn(`[MongoDB] Disconnected from database`);
@@ -82,7 +87,12 @@ const logger = new Logger('DatabaseModule');
               logger.log(`[MongoDB] Successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);
             });
             connection.on('error', (err: any) => {
-              logger.error(`[MongoDB] Connection error: ${err?.message || err}`);
+              const msg = err?.message || String(err);
+              if (msg.includes('alert 80') || msg.includes('tlsv1 alert') || msg.includes('SSL alert')) {
+                logger.error(`[MongoDB TLS/SSL Error] Handshake rejected by MongoDB Atlas (${msg}). Possible cause: Hostinger outbound IP is not allowed in MongoDB Atlas Network Access, or cluster is paused.`);
+              } else {
+                logger.error(`[MongoDB] Connection error: ${msg}`);
+              }
             });
             connection.on('disconnected', () => {
               logger.warn(`[MongoDB] Disconnected from database`);

@@ -35,6 +35,18 @@ export class EmailService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (this.accountModel?.db?.readyState !== 1) {
+      this.accountModel?.db?.once('connected', () => {
+        this.bootstrapEmailAccounts().catch((err) => {
+          this.logger.warn(`Error during deferred email bootstrap: ${err.message}`);
+        });
+      });
+      return;
+    }
+    await this.bootstrapEmailAccounts();
+  }
+
+  private async bootstrapEmailAccounts() {
     try {
       const zohoEmail = process.env.ZOHO_EMAIL?.trim().toLowerCase();
       const zohoPassword = process.env.ZOHO_SMTP_PASSWORD?.trim();

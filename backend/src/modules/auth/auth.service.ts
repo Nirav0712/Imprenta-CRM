@@ -24,6 +24,14 @@ export class AuthService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (this.userModel?.db?.readyState !== 1) {
+      this.userModel?.db?.once('connected', () => {
+        this.seedDefaultAdmin().catch((err) => {
+          this.logger.warn(`Could not seed default admin user on connect: ${err.message}`);
+        });
+      });
+      return;
+    }
     await this.seedDefaultAdmin();
   }
 

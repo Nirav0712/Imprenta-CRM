@@ -46,6 +46,13 @@ export class SendingQueueService implements OnModuleInit, OnModuleDestroy {
    */
   async processNextBatch() {
     if (this.isProcessing) return;
+
+    // Guard against querying when MongoDB is disconnected or connecting
+    // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+    if (this.campaignModel?.db?.readyState !== 1) {
+      return;
+    }
+
     this.isProcessing = true;
 
     try {
