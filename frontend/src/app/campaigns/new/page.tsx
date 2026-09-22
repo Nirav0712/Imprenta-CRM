@@ -68,28 +68,37 @@ export default function NewCampaignWizardPage() {
 
   // Load resources
   useEffect(() => {
-    whatsappApi.getConnections().then((conns) => {
-      setWhatsappConnections(conns || []);
-      if (conns && conns.length > 0) setSelectedWaConnectionId(conns[0]._id);
-    });
+    whatsappApi
+      .getConnections()
+      .then((conns) => {
+        setWhatsappConnections(conns || []);
+        if (conns && conns.length > 0) setSelectedWaConnectionId(conns[0]._id);
+      })
+      .catch((err) => console.warn('Could not load WA connections:', err));
 
-    emailApi.getAccounts().then((accs) => {
-      setEmailAccounts(accs || []);
-      if (accs && accs.length > 0) setSelectedEmailAccountIds([accs[0]._id]);
-    });
+    emailApi
+      .getAccounts()
+      .then((accs) => {
+        setEmailAccounts(accs || []);
+        if (accs && accs.length > 0) setSelectedEmailAccountIds([accs[0]._id]);
+      })
+      .catch((err) => console.warn('Could not load email accounts:', err));
   }, []);
 
   // Load templates when WA connection changes
   useEffect(() => {
     if (selectedWaConnectionId) {
-      whatsappApi.getTemplates(selectedWaConnectionId).then((tpls) => {
-        setTemplates(tpls || []);
-        if (tpls && tpls.length > 0) {
-          handleSelectTemplate(tpls[0]);
-        } else {
-          setSelectedTemplate(null);
-        }
-      });
+      whatsappApi
+        .getTemplates(selectedWaConnectionId)
+        .then((tpls) => {
+          setTemplates(tpls || []);
+          if (tpls && tpls.length > 0) {
+            handleSelectTemplate(tpls[0]);
+          } else {
+            setSelectedTemplate(null);
+          }
+        })
+        .catch((err) => console.warn('Could not load templates:', err));
     }
   }, [selectedWaConnectionId]);
 

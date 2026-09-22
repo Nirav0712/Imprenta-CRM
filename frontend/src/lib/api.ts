@@ -1,11 +1,18 @@
 import axios from 'axios';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grey-falcon-988849.hostingersite.com/api';
+const isLocalhost =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-// In browser environments (both local & production Vercel), use same-origin '/api'
-// Next.js rewrites in next.config.mjs seamlessly proxy all '/api/:path*' calls to Hostinger.
-// This completely avoids CORS preflight failures and browser network errors.
-export const API_BASE = typeof window !== 'undefined' ? '/api' : BACKEND_URL;
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (isLocalhost ? 'http://localhost:4000/api' : 'https://grey-falcon-988849.hostingersite.com/api');
+
+// In local browser development, connect directly to local NestJS backend at http://localhost:4000/api.
+// In production (e.g. Vercel), use same-origin '/api' proxy configured via Next.js rewrites.
+export const API_BASE = isLocalhost
+  ? 'http://localhost:4000/api'
+  : (typeof window !== 'undefined' ? '/api' : BACKEND_URL);
 
 export const api = axios.create({
   baseURL: API_BASE,

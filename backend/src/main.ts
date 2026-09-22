@@ -33,11 +33,31 @@ async function isPortOpen(port: number, host = '127.0.0.1'): Promise<boolean> {
 async function ensureLocalDatabase() {
   const currentUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/automarket';
 
-  // If running in production or connecting to MongoDB Atlas, use directly
-  if (process.env.NODE_ENV === 'production' || currentUri.includes('mongodb+srv://') || (!currentUri.includes('127.0.0.1') && !currentUri.includes('localhost'))) {
+  // If running in production, use remote connection directly
+  if (process.env.NODE_ENV === 'production') {
     const sanitized = currentUri.replace(/\/\/.*@/, '//<auth>@');
     Logger.log(`Using production MongoDB Atlas connection: ${sanitized}`, 'Bootstrap');
     return;
+  }
+
+  // If remote Atlas URI is provided in development, test if it is reachable (handles Atlas IP whitelist issues)
+  if (currentUri.includes('mongodb+srv://') || (!currentUri.includes('127.0.0.1') && !currentUri.includes('localhost'))) {
+    try {
+      const mongoose = await import('mongoose');
+      const testConn = await mongoose.default.createConnection(currentUri, {
+        serverSelectionTimeoutMS: 3000,
+        connectTimeoutMS: 3000,
+      }).asPromise();
+      await testConn.close();
+      const sanitized = currentUri.replace(/\/\/.*@/, '//<auth>@');
+      Logger.log(`Using MongoDB Atlas connection: ${sanitized}`, 'Bootstrap');
+      return;
+    } catch (atlasErr: any) {
+      Logger.warn(
+        `Remote MongoDB Atlas unreachable (${atlasErr.message}). Automatically falling back to local database engine for development...`,
+        'Bootstrap',
+      );
+    }
   }
 
   // Check if an external MongoDB daemon is already running on port 27017

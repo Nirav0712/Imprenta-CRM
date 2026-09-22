@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://grey-falcon-988849.hostingersite.com/api';
+const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 const backendOrigin = backendApiUrl.replace(/\/api\/?$/, '');
 
 const nextConfig = {

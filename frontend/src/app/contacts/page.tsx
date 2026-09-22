@@ -108,7 +108,12 @@ export default function ContactsPage() {
 
   // Load Custom Fields definitions
   useEffect(() => {
-    customFieldsApi.getAll().then((cfs) => setCustomFields(cfs || []));
+    customFieldsApi
+      .getAll()
+      .then((cfs) => setCustomFields(cfs || []))
+      .catch((err) => {
+        console.warn('Could not load custom fields:', err);
+      });
   }, []);
 
   const fetchContacts = useCallback(async () => {
