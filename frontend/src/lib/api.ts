@@ -4,15 +4,13 @@ const isLocalhost =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (isLocalhost ? 'http://localhost:4000/api' : 'https://grey-falcon-988849.hostingersite.com/api');
+const PROD_BACKEND_URL = 'https://grey-falcon-988849.hostingersite.com/api';
 
 // In local browser development, connect directly to local NestJS backend at http://localhost:4000/api.
-// In production (e.g. Vercel), use same-origin '/api' proxy configured via Next.js rewrites.
-export const API_BASE = isLocalhost
-  ? 'http://localhost:4000/api'
-  : (typeof window !== 'undefined' ? '/api' : BACKEND_URL);
+// In production (e.g. Vercel), connect directly to the Hostinger production backend.
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (isLocalhost ? 'http://localhost:4000/api' : PROD_BACKEND_URL);
 
 export const api = axios.create({
   baseURL: API_BASE,
@@ -41,31 +39,10 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Automatic 401 handling & Network Error cross-fallback
+// Automatic 401 handling & safe error extraction
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // If Network Error occurs in browser, retry seamlessly with alternate target
-    if (
-      (error.message === 'Network Error' || error.code === 'ERR_NETWORK') &&
-      error.config &&
-      !error.config._retried &&
-      typeof window !== 'undefined'
-    ) {
-      error.config._retried = true;
-      const currentBase = error.config.baseURL || API_BASE;
-      if (currentBase === '/api' || currentBase.startsWith('/')) {
-        error.config.baseURL = BACKEND_URL;
-      } else {
-        error.config.baseURL = '/api';
-      }
-      try {
-        return await axios.request(error.config);
-      } catch (retryErr) {
-        return Promise.reject(retryErr);
-      }
-    }
-
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token');
@@ -86,6 +63,15 @@ api.interceptors.response.use(
 export function extractErrorMessage(err: any): string {
   if (err.response?.status === 404 && err.config?.url?.includes('/auth/login')) {
     return 'Backend authentication service is deploying on Hostinger. Please allow 1-2 minutes for the Hostinger build to complete, then try again.';
+  }
+  if (err.response?.status === 429) {
+    const retryAfter = err.response?.headers?.['retry-after'];
+    return retryAfter
+      ? `Too many requests. Please wait ${retryAfter} seconds and try again.`
+      : 'Too many requests. Please slow down and try again in a moment.';
+  }
+  if (err.response?.status === 503) {
+    return 'Database or backend service is temporarily unavailable. Please retry in a moment.';
   }
   if (err.response?.data?.message) {
     const msg = err.response.data.message;

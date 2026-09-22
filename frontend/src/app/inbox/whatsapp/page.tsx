@@ -328,9 +328,10 @@ export default function WhatsAppInboxPage() {
     loadConversations();
   }, [selectedConnectionId, search, filterTab, loadConversations]);
 
-  // Real-time polling loop every 3 seconds for fast responsiveness
+  // Real-time polling loop every 3 seconds for fast responsiveness (pauses when tab is hidden)
   useEffect(() => {
     const timer = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       loadConversations(true);
       if (selectedConvRef.current) {
         refreshActiveMessages();

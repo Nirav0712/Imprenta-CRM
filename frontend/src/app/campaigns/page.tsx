@@ -45,8 +45,11 @@ export default function CampaignsPage() {
 
   useEffect(() => {
     loadCampaigns();
-    // Auto-poll progress every 5 seconds
-    const interval = setInterval(loadCampaigns, 5000);
+    // Auto-poll progress every 8 seconds when window is active
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      loadCampaigns();
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 
