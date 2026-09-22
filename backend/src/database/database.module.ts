@@ -61,12 +61,12 @@ const logger = new Logger('DatabaseModule');
         return {
           uri: rawUri,
           dbName,
-          autoIndex: true,
-          serverSelectionTimeoutMS: 15000,
-          connectTimeoutMS: 15000,
+          autoIndex: process.env.NODE_ENV !== 'production',
+          serverSelectionTimeoutMS: 8000,
+          connectTimeoutMS: 10000,
           socketTimeoutMS: 45000,
-          retryAttempts: 5,
-          retryDelay: 3000,
+          retryAttempts: 3,
+          retryDelay: 2000,
           connectionFactory: (connection) => {
             connection.on('connected', () => {
               logger.log(`MongoDB successfully connected to database: "${connection.name || dbName}" (${sanitizedUri})`);

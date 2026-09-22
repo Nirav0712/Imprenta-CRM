@@ -4,98 +4,24 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import * as express from 'express';
-import * as net from 'net';
-
-// Global reference to ensure MongoDB child process is not garbage collected
-declare global {
-  var __MONGOD_INSTANCE__: any;
-}
-
-async function isPortOpen(port: number, host = '127.0.0.1'): Promise<boolean> {
-  return new Promise((resolve) => {
-    const socket = new net.Socket();
-    socket.setTimeout(400);
-    socket.once('connect', () => {
-      socket.destroy();
-      resolve(true);
-    });
-    socket.once('timeout', () => {
-      socket.destroy();
-      resolve(false);
-    });
-    socket.once('error', () => {
-      resolve(false);
-    });
-    socket.connect(port, host);
-  });
-}
-
-async function ensureLocalDatabase() {
-  const currentUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/automarket';
-
-  // If running in production, use remote connection directly
-  if (process.env.NODE_ENV === 'production') {
-    const sanitized = currentUri.replace(/\/\/.*@/, '//<auth>@');
-    Logger.log(`Using production MongoDB Atlas connection: ${sanitized}`, 'Bootstrap');
-    return;
-  }
-
-  // If remote Atlas URI is provided in development, test if it is reachable (handles Atlas IP whitelist issues)
-  if (currentUri.includes('mongodb+srv://') || (!currentUri.includes('127.0.0.1') && !currentUri.includes('localhost'))) {
-    try {
-      const mongoose = await import('mongoose');
-      const testConn = await mongoose.default.createConnection(currentUri, {
-        serverSelectionTimeoutMS: 3000,
-        connectTimeoutMS: 3000,
-      }).asPromise();
-      await testConn.close();
-      const sanitized = currentUri.replace(/\/\/.*@/, '//<auth>@');
-      Logger.log(`Using MongoDB Atlas connection: ${sanitized}`, 'Bootstrap');
-      return;
-    } catch (atlasErr: any) {
-      Logger.warn(
-        `Remote MongoDB Atlas unreachable (${atlasErr.message}). Automatically falling back to local database engine for development...`,
-        'Bootstrap',
-      );
-    }
-  }
-
-  // Check if an external MongoDB daemon is already running on port 27017
-  const isRunning = await isPortOpen(27017);
-  if (isRunning) {
-    Logger.log(`Found active local MongoDB service on port 27017`, 'Bootstrap');
-    process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/automarket';
-    return;
-  }
-
-  // Launch embedded MongoDB Server for local offline development only
-  try {
-    const { MongoMemoryServer } = await import('mongodb-memory-server');
-    const mongod = await MongoMemoryServer.create({
-      instance: {
-        dbName: 'automarket',
-      },
-    });
-
-    global.__MONGOD_INSTANCE__ = mongod;
-    const activeUri = mongod.getUri() + 'automarket';
-    process.env.MONGODB_URI = activeUri;
-
-    Logger.log(`Local development MongoDB database engine started at: ${activeUri}`, 'Bootstrap');
-  } catch (err: any) {
-    Logger.error(`Failed to launch database runner: ${err.message}`, 'Bootstrap');
-  }
-}
 
 async function bootstrap() {
-  await ensureLocalDatabase();
+  const logger = new Logger('Bootstrap');
+
+  // Log sanitized database connection target without leaking credentials
+  const mongoUri = process.env.MONGODB_URI;
+  if (mongoUri) {
+    const sanitized = mongoUri.replace(/\/\/.*@/, '//<auth>@');
+    logger.log(`Target database URI configured: ${sanitized}`);
+  } else if (process.env.NODE_ENV === 'production') {
+    logger.warn('NOTICE: MONGODB_URI is not set. Please ensure MongoDB Atlas connection string is configured in environment variables.');
+  }
 
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
 
   const configService = app.get(ConfigService);
-  const logger = new Logger('Bootstrap');
 
   // Enable Production-safe CORS with exact origin allowlist
   const frontendUrl = process.env.FRONTEND_URL;
@@ -127,7 +53,7 @@ async function bootstrap() {
         return callback(null, true);
       }
 
-      // Allow Vercel deployments (*.vercel.app)
+      // Allow Vercel preview & production deployments
       if (/^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/.test(origin)) {
         return callback(null, true);
       }
@@ -164,9 +90,12 @@ async function bootstrap() {
 
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : (configService.get<number>('port') || 4000);
   const host = '0.0.0.0';
+
+  // Fast port binding for Hostinger and production environments (within 3-second startup SLA)
   await app.listen(port, host);
-  logger.log(`AutoMarket CRM Backend running on http://${host}:${port}`);
+  logger.log(`Imprenta CRM Backend listening on http://${host}:${port} (PID: ${process.pid})`);
 }
 
 bootstrap();
+
 

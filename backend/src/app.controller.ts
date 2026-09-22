@@ -28,7 +28,7 @@ export class AppController {
     const db = this.getDatabaseStatus();
     return {
       status: db.status === 'connected' ? 'ok' : 'degraded',
-      service: 'marketing-automation-backend',
+      service: 'imprenta-crm-backend',
       timestamp: new Date().toISOString(),
       database: db,
     };
@@ -39,7 +39,7 @@ export class AppController {
     const db = this.getDatabaseStatus();
     return {
       status: db.status === 'connected' ? 'ok' : 'degraded',
-      service: 'marketing-automation-backend',
+      service: 'imprenta-crm-backend',
       timestamp: new Date().toISOString(),
       database: db,
     };
@@ -48,7 +48,7 @@ export class AppController {
   @Get()
   getRoot() {
     return {
-      name: 'AutoMarket CRM API',
+      name: 'Imprenta CRM API',
       status: 'online',
       version: '1.0.0',
       database: this.getDatabaseStatus().status,
