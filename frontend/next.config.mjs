@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://goldenrod-sardine-643855.hostingersite.com/api';
+const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api';
 const backendOrigin = backendApiUrl.replace(/\/api\/?$/, '');
 
 const nextConfig = {

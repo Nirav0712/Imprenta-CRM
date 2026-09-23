@@ -4,7 +4,7 @@ const isLocalhost =
   typeof window !== 'undefined' &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-const PROD_BACKEND_URL = 'https://goldenrod-sardine-643855.hostingersite.com/api';
+const PROD_BACKEND_URL = 'https://backendcrm.imprenta.in/api';
 
 // In local browser development, connect directly to local NestJS backend at http://localhost:4000/api.
 // In production (e.g. Vercel), connect directly to the Hostinger production backend.
