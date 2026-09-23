@@ -105,17 +105,41 @@ export class AuthService implements OnModuleInit {
       throw new BadRequestException('Password is required');
     }
 
-    // 1. Guard against disconnected/unready MongoDB connection: Fail fast with 503
+    const normalizedIdentifier = email.trim().toLowerCase();
+    const adminEmail = (process.env.ADMIN_EMAIL || 'admin@imprenta.com').trim().toLowerCase();
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
+
+    const validAdminCredentials: Record<string, string> = {
+      [adminEmail]: adminPassword,
+      'admin@imprenta.com': 'admin123',
+      'admin': 'admin123',
+    };
+
+    const isAdminAttempt = Boolean(validAdminCredentials[normalizedIdentifier]);
+    const isAdminPasswordMatch = isAdminAttempt && validAdminCredentials[normalizedIdentifier] === password;
+
     const readyState = this.userModel?.db?.readyState;
+
+    // If DB is offline but admin provided correct credentials, allow immediate fallback login
     if (readyState !== 1) {
+      if (isAdminPasswordMatch) {
+        this.logger.warn(`Admin login authenticated via fallback credentials (database readyState=${readyState})`);
+        const fallbackAdminPayload = {
+          _id: 'admin-root',
+          email: normalizedIdentifier.includes('@') ? normalizedIdentifier : adminEmail,
+          name: 'System Administrator',
+          organizationId: defaultOrg,
+          role: 'admin',
+        };
+        return this.generateAuthResponse(fallbackAdminPayload, defaultOrg);
+      }
       this.logger.warn(`Login rejected: Database connection unavailable (readyState=${readyState})`);
       throw new ServiceUnavailableException('Database temporarily unavailable');
     }
 
-    const normalizedIdentifier = email.trim().toLowerCase();
-
     // 2. Search database for user by email or username
-    let user;
+    let user: any;
     try {
       user = await this.userModel.findOne({
         $or: [
@@ -125,39 +149,36 @@ export class AuthService implements OnModuleInit {
       }).exec();
     } catch (dbErr: any) {
       this.logger.error(`Database query failed during login: ${dbErr.message}`);
+      if (isAdminPasswordMatch) {
+        const fallbackAdminPayload = {
+          _id: 'admin-root',
+          email: normalizedIdentifier.includes('@') ? normalizedIdentifier : adminEmail,
+          name: 'System Administrator',
+          organizationId: defaultOrg,
+          role: 'admin',
+        };
+        return this.generateAuthResponse(fallbackAdminPayload, defaultOrg);
+      }
       throw new ServiceUnavailableException('Database temporarily unavailable');
     }
 
     // Fallback: If DB had no user yet or connecting initially, verify against configured admin env
-    if (!user) {
-      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@imprenta.com').trim().toLowerCase();
-      const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-      const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
-
-      const validAdminCredentials: Record<string, string> = {
-        [adminEmail]: adminPassword,
-        'admin@imprenta.com': 'admin123',
-        'admin': 'admin123',
-      };
-
-      const expectedPwd = validAdminCredentials[normalizedIdentifier];
-      if (expectedPwd && password === expectedPwd) {
-        const { hash, salt } = this.hashPassword(password);
-        try {
-          user = await this.userModel.create({
-            email: normalizedIdentifier.includes('@') ? normalizedIdentifier : `${normalizedIdentifier}@automarket.internal`,
-            name: 'System Administrator',
-            passwordHash: hash,
-            salt,
-            organizationId: defaultOrg,
-            role: 'admin',
-            isActive: true,
-          });
-        } catch {
-          user = await this.userModel.findOne({
-            $or: [{ email: normalizedIdentifier }, { name: normalizedIdentifier }],
-          }).exec();
-        }
+    if (!user && isAdminPasswordMatch) {
+      const { hash, salt } = this.hashPassword(password);
+      try {
+        user = await this.userModel.create({
+          email: normalizedIdentifier.includes('@') ? normalizedIdentifier : `${normalizedIdentifier}@automarket.internal`,
+          name: 'System Administrator',
+          passwordHash: hash,
+          salt,
+          organizationId: defaultOrg,
+          role: 'admin',
+          isActive: true,
+        });
+      } catch {
+        user = await this.userModel.findOne({
+          $or: [{ email: normalizedIdentifier }, { name: normalizedIdentifier }],
+        }).exec();
       }
     }
 
@@ -179,8 +200,12 @@ export class AuthService implements OnModuleInit {
     user.lastLoginAt = new Date();
     await user.save().catch(() => {});
 
-    // 4. Resolve verified organizationId strictly from database user record
-    const verifiedOrgId = (user.organizationId || 'default-org').trim();
+    // 5. Resolve verified organizationId strictly from database user record
+    const verifiedOrgId = (user.organizationId || defaultOrg).trim();
+    return this.generateAuthResponse(user, verifiedOrgId);
+  }
+
+  private generateAuthResponse(user: any, verifiedOrgId: string) {
 
     const jwtSecret =
       process.env.JWT_SECRET ||
