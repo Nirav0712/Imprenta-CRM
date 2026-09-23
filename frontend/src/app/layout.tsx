@@ -6,6 +6,11 @@ import { AppShell } from '../components/layout/AppShell';
 export const metadata: Metadata = {
   title: 'Imprenta CRM | Customer Relationship Management',
   description: 'Imprenta CRM helps businesses manage contacts, leads, follow-ups, campaigns, and customer relationships in one platform.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
