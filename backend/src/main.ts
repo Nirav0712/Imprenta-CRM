@@ -24,6 +24,33 @@ async function bootstrap() {
   // 1. Create native Express instance
   const server = express();
 
+  // Top-level CORS and OPTIONS preflight handler for Hostinger / LiteSpeed reverse proxy
+  server.use((req, res, next) => {
+    const origin = (req.headers.origin as string) || '';
+    const allowed = [
+      'https://crm.imprenta.in',
+      'https://imprenta-crm-lake.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:4000',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:4000',
+    ];
+
+    const normalized = origin.replace(/\/$/, '').toLowerCase();
+    if (origin && (allowed.includes(normalized) || /^https:\/\/[a-zA-Z0-9_-]+\.vercel\.app$/.test(origin))) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,x-organization-id,x-api-key,Accept,Origin,X-Requested-With');
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+    }
+
+    if (req.method === 'OPTIONS') {
+      return res.status(204).end();
+    }
+    next();
+  });
+
   // 2. Immediate HTTP Server binding for Hostinger 3-second listen SLA
   logger.log(`[Startup] Initiating immediate HTTP socket bind on ${host}:${port}...`);
   const httpServer = http.createServer(server);

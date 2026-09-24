@@ -1,16 +1,17 @@
 import axios from 'axios';
 
+const isBrowser = typeof window !== 'undefined';
 const isLocalhost =
-  typeof window !== 'undefined' &&
+  isBrowser &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-const PROD_BACKEND_URL = 'https://backendcrm.imprenta.in/api';
-
-// In local browser development, connect directly to local NestJS backend at http://localhost:4000/api.
-// In production (e.g. Vercel), connect directly to the Hostinger production backend.
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (isLocalhost ? 'http://localhost:4000/api' : PROD_BACKEND_URL);
+// In browser production (e.g. on crm.imprenta.in or vercel.app), always use same-origin relative '/api'.
+// This lets Next.js rewrites transparently proxy API calls directly to the Hostinger backend without CORS or OPTIONS preflight issues.
+// In local browser development, connect to local backend (http://localhost:4000/api).
+// In server-side SSR / build, connect to process.env.NEXT_PUBLIC_API_URL or fallback to Hostinger URL.
+export const API_BASE = isBrowser
+  ? (isLocalhost ? 'http://localhost:4000/api' : '/api')
+  : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api');
 
 export const api = axios.create({
   baseURL: API_BASE,
