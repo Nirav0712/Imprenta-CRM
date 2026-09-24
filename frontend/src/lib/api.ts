@@ -5,12 +5,11 @@ const isLocalhost =
   isBrowser &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-// In browser production (e.g. on crm.imprenta.in or vercel.app), always use same-origin relative '/api'.
-// This lets Next.js rewrites transparently proxy API calls directly to the Hostinger backend without CORS or OPTIONS preflight issues.
-// In local browser development, connect to local backend (http://localhost:4000/api).
-// In server-side SSR / build, connect to process.env.NEXT_PUBLIC_API_URL or fallback to Hostinger URL.
+// In browser production, connect directly to backend URL (https://backendcrm.imprenta.in/api)
+// or use process.env.NEXT_PUBLIC_API_URL to bypass Vercel proxy / 502 rewrite errors.
+// In local development, connect to local backend (http://localhost:4000/api).
 export const API_BASE = isBrowser
-  ? (isLocalhost ? 'http://localhost:4000/api' : '/api')
+  ? (isLocalhost ? 'http://localhost:4000/api' : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api'))
   : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api');
 
 export const api = axios.create({
@@ -62,8 +61,11 @@ api.interceptors.response.use(
 
 // Response error handler helper
 export function extractErrorMessage(err: any): string {
+  if (err.response?.status === 502) {
+    return 'The server proxy encountered a 502 Bad Gateway. Connecting directly to the backend...';
+  }
   if (err.response?.status === 404 && err.config?.url?.includes('/auth/login')) {
-    return 'Backend authentication service is deploying on Hostinger. Please allow 1-2 minutes for the Hostinger build to complete, then try again.';
+    return 'Backend authentication service is deploying. Please allow a moment and try again.';
   }
   if (err.response?.status === 429) {
     const retryAfter = err.response?.headers?.['retry-after'];

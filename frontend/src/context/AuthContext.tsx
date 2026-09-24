@@ -129,26 +129,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password: credentials.password,
         });
       } catch (primaryErr: any) {
-        // If the primary endpoint returned 404 and running in local development, fallback to local backend
+        // If primary call failed (e.g. 502 Vercel rewrite, 404 or network issue), try direct fetch to backend
         const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-        if (primaryErr.response?.status === 404 && isLocal) {
-          try {
-            const fallbackFetch = await fetch('http://localhost:4000/api/auth/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: credentials.email.trim(), password: credentials.password }),
-            });
-            if (fallbackFetch.ok) {
-              res = await fallbackFetch.json();
-            } else {
-              const errData = await fallbackFetch.json().catch(() => ({}));
-              throw new Error(errData.message || 'Invalid email or password');
-            }
-          } catch (fallbackErr: any) {
-            throw new Error(fallbackErr.message || extractErrorMessage(primaryErr));
+        const fallbackUrl = isLocal
+          ? 'http://localhost:4000/api/auth/login'
+          : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api') + '/auth/login';
+
+        try {
+          const fallbackFetch = await fetch(fallbackUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: credentials.email.trim(), password: credentials.password }),
+          });
+          if (fallbackFetch.ok) {
+            res = await fallbackFetch.json();
+          } else {
+            const errData = await fallbackFetch.json().catch(() => ({}));
+            throw new Error(errData.message || extractErrorMessage(primaryErr));
           }
-        } else {
-          throw new Error(extractErrorMessage(primaryErr));
+        } catch (fallbackErr: any) {
+          throw new Error(fallbackErr.message || extractErrorMessage(primaryErr));
         }
       }
 

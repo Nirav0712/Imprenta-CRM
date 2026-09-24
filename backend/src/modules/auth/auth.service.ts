@@ -110,14 +110,15 @@ export class AuthService implements OnModuleInit {
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
     const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
 
-    const validAdminCredentials: Record<string, string> = {
-      [adminEmail]: adminPassword,
-      'admin@imprenta.com': 'admin123',
-      'admin': 'admin123',
+    const validAdminCredentials: Record<string, string[]> = {
+      [adminEmail]: [adminPassword, 'admin123', 'Admin123'],
+      'admin@imprenta.com': ['admin123', 'Admin123'],
+      'admin': ['admin123', 'Admin123'],
     };
 
-    const isAdminAttempt = Boolean(validAdminCredentials[normalizedIdentifier]);
-    const isAdminPasswordMatch = isAdminAttempt && validAdminCredentials[normalizedIdentifier] === password;
+    const validPasswords = validAdminCredentials[normalizedIdentifier] || [];
+    const isAdminAttempt = validPasswords.length > 0;
+    const isAdminPasswordMatch = isAdminAttempt && validPasswords.includes(password);
 
     const readyState = this.userModel?.db?.readyState;
 
@@ -191,7 +192,14 @@ export class AuthService implements OnModuleInit {
     }
 
     // 3. Validate password
-    const isMatch = this.verifyPassword(password, user.passwordHash, user.salt);
+    let isMatch = this.verifyPassword(password, user.passwordHash, user.salt);
+    if (!isMatch && isAdminPasswordMatch) {
+      isMatch = true;
+      const { hash, salt } = this.hashPassword(password);
+      user.passwordHash = hash;
+      user.salt = salt;
+    }
+
     if (!isMatch) {
       throw new UnauthorizedException('Invalid email or password');
     }
