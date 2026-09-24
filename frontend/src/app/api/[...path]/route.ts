@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import https from 'https';
 import http from 'http';
 
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 function getBackendTarget(): { protocol: string; hostname: string; port: number; basePath: string } {
