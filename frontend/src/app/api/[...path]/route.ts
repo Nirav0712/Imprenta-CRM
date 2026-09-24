@@ -24,8 +24,10 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
 
       // Build safe forward headers
       const headers: Record<string, string> = {
-        'User-Agent': 'Imprenta-CRM-Proxy/1.0',
+        'Host': target.hostname,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Imprenta-CRM-Proxy/1.0',
         'Accept': 'application/json, text/plain, */*',
+        'Connection': 'close',
       };
 
       const allowedHeaderNames = [
