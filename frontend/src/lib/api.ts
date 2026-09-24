@@ -5,12 +5,9 @@ const isLocalhost =
   isBrowser &&
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-// In browser production, connect directly to backend URL (https://backendcrm.imprenta.in/api)
-// or use process.env.NEXT_PUBLIC_API_URL to bypass Vercel proxy / 502 rewrite errors.
-// In local development, connect to local backend (http://localhost:4000/api).
-export const API_BASE = isBrowser
-  ? (isLocalhost ? 'http://localhost:4000/api' : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api'))
-  : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api');
+// Use standard relative '/api' so all requests are routed seamlessly through Next.js API Route Handlers.
+// This completely avoids CORS preflight failures, 502 Vercel edge router errors, and SSL handshake mismatches.
+export const API_BASE = '/api';
 
 export const api = axios.create({
   baseURL: API_BASE,
