@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const DEFAULT_BACKEND = process.env.NODE_ENV === 'development'
   ? 'http://localhost:4000/api'
   : 'https://backendcrm.imprenta.in/api';
@@ -14,12 +16,23 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
     const searchParams = url.search;
     const targetUrl = `${BACKEND_BASE}/${path}${searchParams}`;
 
-    // Extract incoming headers to forward
-    const forwardHeaders = new Headers();
-    const disallowedHeaders = ['host', 'connection', 'content-length', 'transfer-encoding'];
-    req.headers.forEach((value, key) => {
-      if (!disallowedHeaders.includes(key.toLowerCase())) {
-        forwardHeaders.set(key, value);
+    // Selectively forward only valid, clean application headers
+    const forwardHeaders: Record<string, string> = {
+      'User-Agent': 'Imprenta-CRM-Proxy/1.0',
+    };
+
+    const allowedHeaders = [
+      'authorization',
+      'x-organization-id',
+      'x-api-key',
+      'content-type',
+      'accept',
+    ];
+
+    allowedHeaders.forEach((name) => {
+      const val = req.headers.get(name);
+      if (val) {
+        forwardHeaders[name] = val;
       }
     });
 
@@ -31,7 +44,7 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
         if (text) {
           body = text;
         }
-        forwardHeaders.set('content-type', 'application/json');
+        forwardHeaders['content-type'] = 'application/json';
       } else if (contentType.includes('multipart/form-data')) {
         body = await req.formData();
       } else {
@@ -51,7 +64,7 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
         cache: 'no-store',
       });
     } catch (fetchErr: any) {
-      // If local backend fails in dev, try live backend
+      // Fallback: If connecting to localhost failed in dev or primary domain had network blip, try live backend
       if (BACKEND_BASE.includes('localhost') || BACKEND_BASE.includes('127.0.0.1')) {
         const fallbackTarget = `https://backendcrm.imprenta.in/api/${path}${searchParams}`;
         backendRes = await fetch(fallbackTarget, {
@@ -67,7 +80,8 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
 
     const resHeaders = new Headers();
     backendRes.headers.forEach((value, key) => {
-      if (!['transfer-encoding', 'content-encoding'].includes(key.toLowerCase())) {
+      const lowerKey = key.toLowerCase();
+      if (!['transfer-encoding', 'content-encoding', 'connection', 'keep-alive'].includes(lowerKey)) {
         resHeaders.set(key, value);
       }
     });
