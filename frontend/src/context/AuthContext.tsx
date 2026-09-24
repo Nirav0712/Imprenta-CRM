@@ -130,10 +130,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       } catch (primaryErr: any) {
         // If primary call failed (e.g. 502 Vercel rewrite, 404 or network issue), try direct fetch to backend
-        const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         const fallbackUrl = isLocal
           ? 'http://localhost:4000/api/auth/login'
-          : (process.env.NEXT_PUBLIC_API_URL || 'https://backendcrm.imprenta.in/api') + '/auth/login';
+          : 'https://backendcrm.imprenta.in/api/auth/login';
 
         try {
           const fallbackFetch = await fetch(fallbackUrl, {

@@ -3,13 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 function getBackendBase(): string {
-  const envUrl = process.env.BACKEND_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
-  if (envUrl && envUrl.startsWith('http') && !envUrl.includes('crm.imprenta.in') && !envUrl.includes('vercel.app')) {
-    return envUrl.replace(/\/+$/, '');
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:4000/api';
   }
-  return process.env.NODE_ENV === 'development'
-    ? 'http://localhost:4000/api'
-    : 'https://backendcrm.imprenta.in/api';
+  const internal = process.env.BACKEND_INTERNAL_URL;
+  if (
+    internal &&
+    internal.startsWith('http') &&
+    !internal.includes('hostingersite.com') &&
+    !internal.includes('vercel.app') &&
+    !internal.includes('crm.imprenta.in')
+  ) {
+    return internal.replace(/\/+$/, '');
+  }
+  return 'https://backendcrm.imprenta.in/api';
 }
 
 const BACKEND_BASE = getBackendBase();
