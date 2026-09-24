@@ -48,10 +48,14 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
       // Read request body if applicable
       let bodyBuffer: Buffer | null = null;
       if (req.method !== 'GET' && req.method !== 'HEAD') {
-        const arrayBuf = await req.arrayBuffer();
-        if (arrayBuf && arrayBuf.byteLength > 0) {
-          bodyBuffer = Buffer.from(arrayBuf);
-          headers['Content-Length'] = String(bodyBuffer.length);
+        try {
+          const text = await req.text();
+          if (text && text.length > 0) {
+            bodyBuffer = Buffer.from(text, 'utf8');
+            headers['Content-Length'] = String(bodyBuffer.length);
+          }
+        } catch (e: any) {
+          console.warn('[Proxy Body Read Warning]', e);
         }
       }
 
