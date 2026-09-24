@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const DEFAULT_BACKEND = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:4000/api'
-  : 'https://backendcrm.imprenta.in/api';
+function getBackendBase(): string {
+  const envUrl = process.env.BACKEND_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && envUrl.startsWith('http') && !envUrl.includes('crm.imprenta.in') && !envUrl.includes('vercel.app')) {
+    return envUrl.replace(/\/+$/, '');
+  }
+  return process.env.NODE_ENV === 'development'
+    ? 'http://localhost:4000/api'
+    : 'https://backendcrm.imprenta.in/api';
+}
 
-const BACKEND_BASE = (process.env.BACKEND_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || DEFAULT_BACKEND).replace(/\/+$/, '');
+const BACKEND_BASE = getBackendBase();
 
 async function handleProxy(req: NextRequest, { params }: { params: { path: string[] } }) {
   try {
@@ -64,18 +70,14 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
         cache: 'no-store',
       });
     } catch (fetchErr: any) {
-      // Fallback: If connecting to localhost failed in dev or primary domain had network blip, try live backend
-      if (BACKEND_BASE.includes('localhost') || BACKEND_BASE.includes('127.0.0.1')) {
-        const fallbackTarget = `https://backendcrm.imprenta.in/api/${path}${searchParams}`;
-        backendRes = await fetch(fallbackTarget, {
-          method: req.method,
-          headers: forwardHeaders,
-          body,
-          cache: 'no-store',
-        });
-      } else {
-        throw fetchErr;
-      }
+      // Fallback: If connecting to localhost failed or primary had a blip, try live backend directly
+      const liveTarget = `https://backendcrm.imprenta.in/api/${path}${searchParams}`;
+      backendRes = await fetch(liveTarget, {
+        method: req.method,
+        headers: forwardHeaders,
+        body,
+        cache: 'no-store',
+      });
     }
 
     const resHeaders = new Headers();
