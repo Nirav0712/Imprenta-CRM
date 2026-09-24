@@ -1,129 +1,134 @@
 import { NextRequest, NextResponse } from 'next/server';
+import https from 'https';
+import http from 'http';
 
 export const dynamic = 'force-dynamic';
 
-function getBackendBase(): string {
+function getBackendTarget(): { protocol: string; hostname: string; port: number; basePath: string } {
   if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:4000/api';
+    return { protocol: 'http:', hostname: 'localhost', port: 4000, basePath: '/api' };
   }
-  const internal = process.env.BACKEND_INTERNAL_URL;
-  if (
-    internal &&
-    internal.startsWith('http') &&
-    !internal.includes('hostingersite.com') &&
-    !internal.includes('vercel.app') &&
-    !internal.includes('crm.imprenta.in')
-  ) {
-    return internal.replace(/\/+$/, '');
-  }
-  return 'https://backendcrm.imprenta.in/api';
+  return { protocol: 'https:', hostname: 'backendcrm.imprenta.in', port: 443, basePath: '/api' };
 }
 
-const BACKEND_BASE = getBackendBase();
-
-async function handleProxy(req: NextRequest, { params }: { params: { path: string[] } }) {
-  try {
-    const pathSegments = params?.path || [];
-    const path = pathSegments.join('/');
-    const url = new URL(req.url);
-    const searchParams = url.search;
-    const targetUrl = `${BACKEND_BASE}/${path}${searchParams}`;
-
-    // Selectively forward only valid, clean application headers
-    const forwardHeaders: Record<string, string> = {
-      'User-Agent': 'Imprenta-CRM-Proxy/1.0',
-    };
-
-    const allowedHeaders = [
-      'authorization',
-      'x-organization-id',
-      'x-api-key',
-      'content-type',
-      'accept',
-    ];
-
-    allowedHeaders.forEach((name) => {
-      const val = req.headers.get(name);
-      if (val) {
-        forwardHeaders[name] = val;
-      }
-    });
-
-    let body: BodyInit | undefined = undefined;
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-      const contentType = req.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        const text = await req.text();
-        if (text) {
-          body = text;
-        }
-        forwardHeaders['content-type'] = 'application/json';
-      } else if (contentType.includes('multipart/form-data')) {
-        body = await req.formData();
-      } else {
-        const text = await req.text();
-        if (text) {
-          body = text;
-        }
-      }
-    }
-
-    let backendRes: Response;
+async function executeProxy(req: NextRequest, { params }: { params: { path: string[] } }) {
+  return new Promise<NextResponse>(async (resolve) => {
     try {
-      backendRes = await fetch(targetUrl, {
-        method: req.method,
-        headers: forwardHeaders,
-        body,
-        cache: 'no-store',
-      });
-    } catch (fetchErr: any) {
-      // Fallback: If connecting to localhost failed or primary had a blip, try live backend directly
-      const liveTarget = `https://backendcrm.imprenta.in/api/${path}${searchParams}`;
-      backendRes = await fetch(liveTarget, {
-        method: req.method,
-        headers: forwardHeaders,
-        body,
-        cache: 'no-store',
-      });
-    }
+      const pathSegments = params?.path || [];
+      const subPath = pathSegments.join('/');
+      const url = new URL(req.url);
+      const search = url.search || '';
+      
+      const target = getBackendTarget();
+      const requestPath = `${target.basePath}/${subPath}${search}`;
 
-    const resHeaders = new Headers();
-    backendRes.headers.forEach((value, key) => {
-      const lowerKey = key.toLowerCase();
-      if (!['transfer-encoding', 'content-encoding', 'connection', 'keep-alive'].includes(lowerKey)) {
-        resHeaders.set(key, value);
+      // Build safe forward headers
+      const headers: Record<string, string> = {
+        'User-Agent': 'Imprenta-CRM-Proxy/1.0',
+        'Accept': 'application/json, text/plain, */*',
+      };
+
+      const allowedHeaderNames = [
+        'authorization',
+        'x-organization-id',
+        'x-api-key',
+        'content-type',
+      ];
+
+      allowedHeaderNames.forEach((name) => {
+        const val = req.headers.get(name);
+        if (val) {
+          headers[name] = val;
+        }
+      });
+
+      // Read request body if applicable
+      let bodyBuffer: Buffer | null = null;
+      if (req.method !== 'GET' && req.method !== 'HEAD') {
+        const arrayBuf = await req.arrayBuffer();
+        if (arrayBuf && arrayBuf.byteLength > 0) {
+          bodyBuffer = Buffer.from(arrayBuf);
+          headers['Content-Length'] = String(bodyBuffer.length);
+        }
       }
-    });
 
-    const resContentType = backendRes.headers.get('content-type') || '';
-    if (resContentType.includes('application/json')) {
-      const data = await backendRes.json().catch(() => ({}));
-      return NextResponse.json(data, {
-        status: backendRes.status,
-        headers: resHeaders,
+      const transport = target.protocol === 'https:' ? https : http;
+
+      const proxyReq = transport.request(
+        {
+          hostname: target.hostname,
+          port: target.port,
+          path: requestPath,
+          method: req.method,
+          headers,
+          rejectUnauthorized: false, // Prevents TLS certificate chain rejection on serverless
+          timeout: 30000,
+        },
+        (backendRes) => {
+          const chunks: Buffer[] = [];
+          backendRes.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+          backendRes.on('end', () => {
+            const fullBuffer = Buffer.concat(chunks);
+            const resHeaders = new Headers();
+
+            const contentType = backendRes.headers['content-type'] || 'application/json';
+            resHeaders.set('Content-Type', Array.isArray(contentType) ? contentType[0] : contentType);
+
+            const status = backendRes.statusCode || 200;
+
+            if (contentType.includes('application/json')) {
+              try {
+                const parsed = JSON.parse(fullBuffer.toString('utf8'));
+                return resolve(NextResponse.json(parsed, { status, headers: resHeaders }));
+              } catch {
+                return resolve(new NextResponse(fullBuffer, { status, headers: resHeaders }));
+              }
+            }
+
+            return resolve(new NextResponse(fullBuffer, { status, headers: resHeaders }));
+          });
+        }
+      );
+
+      proxyReq.on('error', (err) => {
+        console.error('[Native Proxy Error]', err);
+        return resolve(
+          NextResponse.json(
+            { success: false, message: 'Backend connection error: ' + err.message },
+            { status: 502 }
+          )
+        );
       });
-    }
 
-    const resBuffer = await backendRes.arrayBuffer();
-    return new NextResponse(resBuffer, {
-      status: backendRes.status,
-      headers: resHeaders,
-    });
-  } catch (error: any) {
-    console.error('[API Proxy Route Error]', error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: error.message || 'Error communicating with backend service',
-      },
-      { status: 500 }
-    );
-  }
+      proxyReq.on('timeout', () => {
+        proxyReq.destroy();
+        return resolve(
+          NextResponse.json(
+            { success: false, message: 'Backend connection timed out' },
+            { status: 504 }
+          )
+        );
+      });
+
+      if (bodyBuffer) {
+        proxyReq.write(bodyBuffer);
+      }
+      proxyReq.end();
+    } catch (err: any) {
+      console.error('[Proxy Handler Exception]', err);
+      return resolve(
+        NextResponse.json(
+          { success: false, message: err.message || 'Internal proxy error' },
+          { status: 500 }
+        )
+      );
+    }
+  });
 }
 
-export const GET = handleProxy;
-export const POST = handleProxy;
-export const PUT = handleProxy;
-export const PATCH = handleProxy;
-export const DELETE = handleProxy;
-export const HEAD = handleProxy;
+export const GET = executeProxy;
+export const POST = executeProxy;
+export const PUT = executeProxy;
+export const PATCH = executeProxy;
+export const DELETE = executeProxy;
+export const HEAD = executeProxy;
