@@ -14,7 +14,7 @@ function getBackendTarget(): { protocol: string; hostname: string; port: number;
   if (
     envTarget &&
     envTarget.startsWith('http') &&
-    !envTarget.includes('hostingersite.com') &&
+    !envTarget.includes('grey-falcon-988849') &&
     !envTarget.includes('vercel.app') &&
     !envTarget.includes('crm.imprenta.in')
   ) {
@@ -33,7 +33,7 @@ function getBackendTarget(): { protocol: string; hostname: string; port: number;
   if (process.env.NODE_ENV === 'development') {
     return { protocol: 'http:', hostname: 'localhost', port: 4000, basePath: '/api' };
   }
-  return { protocol: 'https:', hostname: 'backendcrm.imprenta.in', port: 443, basePath: '/api' };
+  return { protocol: 'https:', hostname: 'lightblue-barracuda-385069.hostingersite.com', port: 443, basePath: '/api' };
 }
 
 async function executeProxy(req: NextRequest, { params }: { params: { path: string[] } }) {

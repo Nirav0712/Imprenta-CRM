@@ -138,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         const fallbackUrl = isLocal
           ? 'http://localhost:4000/api/auth/login'
-          : 'https://backendcrm.imprenta.in/api/auth/login';
+          : 'https://lightblue-barracuda-385069.hostingersite.com/api/auth/login';
 
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 5000);
