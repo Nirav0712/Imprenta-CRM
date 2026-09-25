@@ -4,8 +4,8 @@ import { ThemeProvider } from '../context/ThemeContext';
 import { AppShell } from '../components/layout/AppShell';
 
 export const metadata: Metadata = {
-  title: 'The Digital Connect CRM | Smart CRM & Marketing Suite',
-  description: 'The Digital Connect CRM - Group of Chamunda Enterprise helps businesses manage contacts, leads, follow-ups, campaigns, and customer relationships in one platform.',
+  title: 'Imprenta CRM | Smart CRM & Marketing Suite',
+  description: 'Imprenta CRM helps businesses manage contacts, leads, follow-ups, campaigns, and customer relationships in one unified platform.',
   icons: {
     icon: [
       { url: '/logo.png', type: 'image/png' },

@@ -307,7 +307,7 @@ export function EmailComposeModal({
                   ) : (
                     <Send className="w-3.5 h-3.5" />
                   )}
-                  {sending ? 'Sending...' : 'Send via The Digital Connect CRM'}
+                  {sending ? 'Sending...' : 'Send via Imprenta CRM'}
                 </button>
               )}
             </div>

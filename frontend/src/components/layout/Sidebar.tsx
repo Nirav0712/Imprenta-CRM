@@ -157,10 +157,10 @@ export function Sidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-bold text-slate-900 dark:text-white text-xs tracking-tight truncate">
-                The Digital Connect
+                Imprenta CRM
               </div>
               <div className="text-[9px] font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider truncate">
-                GROUP OF CHAMUNDA ENT.
+                ENTERPRISE SUITE
               </div>
             </div>
           )}

@@ -55,8 +55,8 @@ export class EmailService implements OnModuleInit {
       const zohoSecure = process.env.ZOHO_SMTP_SECURE !== 'false';
       const zohoImapHost = process.env.ZOHO_IMAP_HOST?.trim() || (zohoEmail?.endsWith('.in') ? 'imap.zoho.in' : 'imap.zoho.com');
       const zohoImapPort = parseInt(process.env.ZOHO_IMAP_PORT || '993', 10);
-      const zohoName = process.env.ZOHO_ACCOUNT_NAME?.trim() || 'The Digital Connect';
-      const zohoSender = process.env.ZOHO_SENDER_NAME?.trim() || 'The Digital Connect';
+      const zohoName = process.env.ZOHO_ACCOUNT_NAME?.trim() || 'Imprenta';
+      const zohoSender = process.env.ZOHO_SENDER_NAME?.trim() || 'Imprenta';
 
       if (zohoEmail) {
         let account = await this.accountModel.findOne({ emailAddress: zohoEmail }).select('+encryptedPassword');

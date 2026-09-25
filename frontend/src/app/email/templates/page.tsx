@@ -24,9 +24,9 @@ const INITIAL_TEMPLATES: EmailTemplate[] = [
   {
     id: '1',
     name: 'B2B Welcome Introduction',
-    subject: 'Welcome to The Digital Connect CRM, {{firstName}}!',
+    subject: 'Welcome to Imprenta CRM, {{firstName}}!',
     category: 'Onboarding',
-    bodyHtml: `<p>Hi {{firstName}},</p><p>Thank you for connecting with us at {{company}}. We are thrilled to show you how our The Digital Connect CRM platform can streamline your customer relationships and outbound campaigns.</p><p>Best regards,<br/>The Team</p>`,
+    bodyHtml: `<p>Hi {{firstName}},</p><p>Thank you for connecting with us at {{company}}. We are thrilled to show you how our Imprenta CRM platform can streamline your customer relationships and outbound campaigns.</p><p>Best regards,<br/>The Team</p>`,
     variables: ['firstName', 'company'],
   },
   {

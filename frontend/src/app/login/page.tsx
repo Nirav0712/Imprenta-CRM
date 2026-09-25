@@ -94,14 +94,14 @@ function LoginForm() {
             
             <img
               src="/logo.png"
-              alt="The Digital Connect"
+              alt="Imprenta CRM"
               className="h-14 md:h-16 w-auto object-contain drop-shadow-[0_4px_12px_rgba(14,165,233,0.25)]"
             />
           </div>
 
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-[11px] font-medium tracking-wide shadow-inner">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-            <span>Enterprise CRM & Marketing Suite</span>
+            <span>Imprenta CRM & Marketing Suite</span>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ function LoginForm() {
               Welcome Back
             </h2>
             <p className="text-xs text-slate-400 mt-1">
-              Sign in to access your workspace and automated pipelines
+              Sign in to access your Imprenta workspace and automated pipelines
             </p>
           </div>
 
@@ -142,7 +142,7 @@ function LoginForm() {
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="thedigitalconnect712@gmail.com"
+                  placeholder="admin@imprenta.in"
                   autoComplete="username"
                   required
                   className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl bg-[#07111e]/90 border border-slate-700/80 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all shadow-inner"
@@ -217,7 +217,7 @@ function LoginForm() {
             <span>256-Bit SSL Encrypted Multi-Tenant Architecture</span>
           </div>
           <p className="text-[10px] text-slate-400">
-            © {new Date().getFullYear()} The Digital Connect • Group of Chamunda Enterprise
+            © {new Date().getFullYear()} Imprenta CRM • Enterprise Marketing Suite
           </p>
         </div>
       </div>

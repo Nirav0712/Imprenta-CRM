@@ -82,7 +82,7 @@ export class AuthService implements OnModuleInit {
         const { hash, salt } = this.hashPassword(defaultPassword);
         await this.userModel.create({
           email: defaultEmail,
-          name: 'The Digital Connect Administrator',
+          name: 'Imprenta Administrator',
           passwordHash: hash,
           salt,
           organizationId: defaultOrg,
