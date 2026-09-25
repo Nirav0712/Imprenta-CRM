@@ -35,15 +35,7 @@ export class EmailService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    if (this.accountModel?.db?.readyState !== 1) {
-      this.accountModel?.db?.once('connected', () => {
-        this.bootstrapEmailAccounts().catch((err) => {
-          this.logger.warn(`Error during deferred email bootstrap: ${err.message}`);
-        });
-      });
-      return;
-    }
-    await this.bootstrapEmailAccounts();
+    // Auto-bootstrap disabled: Email accounts are exclusively managed by user via UI and stay deleted when removed.
   }
 
   private async bootstrapEmailAccounts() {
