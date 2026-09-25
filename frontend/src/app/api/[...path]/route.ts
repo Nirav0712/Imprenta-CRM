@@ -11,7 +11,13 @@ function getBackendTarget(): { protocol: string; hostname: string; port: number;
     process.env.BACKEND_URL ||
     process.env.NEXT_PUBLIC_API_URL;
 
-  if (envTarget && envTarget.startsWith('http')) {
+  if (
+    envTarget &&
+    envTarget.startsWith('http') &&
+    !envTarget.includes('hostingersite.com') &&
+    !envTarget.includes('vercel.app') &&
+    !envTarget.includes('crm.imprenta.in')
+  ) {
     try {
       const parsed = new URL(envTarget);
       const protocol = parsed.protocol || 'https:';
