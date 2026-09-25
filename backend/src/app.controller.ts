@@ -21,7 +21,7 @@ export class AppController {
     return {
       status: stateMap[state] || 'unknown',
       readyState: state,
-      databaseName: this.connection?.name || 'automarket',
+      databaseName: this.connection?.name || process.env.MONGODB_DB_NAME || 'imprenta_crm',
     };
   }
 

@@ -13,8 +13,8 @@ export interface AppConfig {
 
 export const configuration = (): AppConfig => ({
   port: parseInt(process.env.PORT || '4000', 10),
-  mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/marketing_automation',
-  mongoDbName: process.env.MONGODB_DB_NAME || 'automarket',
+  mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/imprenta_crm',
+  mongoDbName: process.env.MONGODB_DB_NAME || 'imprenta_crm',
   encryptionKey: process.env.ENCRYPTION_KEY || '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
   jwtSecret: process.env.JWT_SECRET || '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
   apiKey: process.env.API_KEY || '',

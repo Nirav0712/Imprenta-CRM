@@ -74,13 +74,14 @@ async function bootstrap() {
 
   // 3. Early health probe responder while NestJS initializes in parallel
   let isNestReady = false;
+  const dbName = process.env.MONGODB_DB_NAME || 'imprenta_crm';
   server.get('/health', (req, res, next) => {
     if (!isNestReady) {
       return res.status(200).json({
         status: 'starting',
         service: 'imprenta-crm-backend',
         timestamp: new Date().toISOString(),
-        database: { status: 'initializing', databaseName: 'automarket' },
+        database: { status: 'initializing', databaseName: dbName },
       });
     }
     next();
@@ -91,7 +92,7 @@ async function bootstrap() {
         status: 'starting',
         service: 'imprenta-crm-backend',
         timestamp: new Date().toISOString(),
-        database: { status: 'initializing', databaseName: 'automarket' },
+        database: { status: 'initializing', databaseName: dbName },
       });
     }
     next();

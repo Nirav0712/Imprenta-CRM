@@ -54,8 +54,8 @@ const logger = new Logger('DatabaseModule');
   imports: [
     MongooseModule.forRootAsync({
       useFactory: (configService: ConfigService) => {
-        const rawUri = process.env.MONGODB_URI || configService.get<string>('mongoUri') || 'mongodb://127.0.0.1:27017/marketing_automation';
-        const dbName = process.env.MONGODB_DB_NAME || configService.get<string>('mongoDbName') || 'automarket';
+        const rawUri = process.env.MONGODB_URI || configService.get<string>('mongoUri') || 'mongodb://127.0.0.1:27017/imprenta_crm';
+        const dbName = process.env.MONGODB_DB_NAME || configService.get<string>('mongoDbName') || 'imprenta_crm';
         const sanitizedUri = rawUri.replace(/\/\/.*@/, '//<auth>@');
 
         return {
