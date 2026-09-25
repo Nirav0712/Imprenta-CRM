@@ -10,7 +10,8 @@ import * as http from 'http';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
-  const port = parseInt(process.env.PORT || '4000', 10);
+  const rawPort = process.env.PORT || '4000';
+  const port = !isNaN(Number(rawPort)) ? parseInt(rawPort, 10) : rawPort;
   const host = '0.0.0.0';
   const isProd = process.env.NODE_ENV === 'production';
   const hasMongoUri = Boolean(process.env.MONGODB_URI);
@@ -56,12 +57,17 @@ async function bootstrap() {
   const httpServer = http.createServer(server);
 
   await new Promise<void>((resolve, reject) => {
-    httpServer.listen(port, host, () => {
-      logger.log(`[Startup] HTTP socket successfully bound to http://${host}:${port} (PID: ${process.pid})`);
+    const onListen = () => {
+      logger.log(`[Startup] HTTP socket successfully bound to ${port} (PID: ${process.pid})`);
       resolve();
-    });
+    };
+    if (typeof port === 'number') {
+      httpServer.listen(port, host, onListen);
+    } else {
+      httpServer.listen(port, onListen);
+    }
     httpServer.once('error', (err) => {
-      logger.error(`[Startup] Failed to bind HTTP socket on ${host}:${port}: ${err.message}`);
+      logger.error(`[Startup] Failed to bind HTTP socket: ${err.message}`);
       reject(err);
     });
   });

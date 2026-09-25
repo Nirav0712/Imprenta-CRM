@@ -14,7 +14,7 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000,
+  timeout: 7000,
 });
 
 // Automatically attach authentication credentials from localStorage if present
@@ -58,26 +58,32 @@ api.interceptors.response.use(
 
 // Response error handler helper
 export function extractErrorMessage(err: any): string {
-  if (err.response?.status === 502) {
-    return 'The server proxy encountered a 502 Bad Gateway. Connecting directly to the backend...';
+  if (err?.code === 'ECONNABORTED' || err?.message?.includes('timeout') || err?.name === 'AbortError') {
+    return 'Server response timed out. Please check if the backend service is running.';
   }
-  if (err.response?.status === 404 && err.config?.url?.includes('/auth/login')) {
-    return 'Backend authentication service is deploying. Please allow a moment and try again.';
+  if (err?.response?.data?.message) {
+    const msg = err.response.data.message;
+    return Array.isArray(msg) ? msg.join(', ') : msg;
   }
-  if (err.response?.status === 429) {
+  if (err?.response?.status === 502) {
+    return 'Backend service is currently offline or unreachable (502 Bad Gateway).';
+  }
+  if (err?.response?.status === 504) {
+    return 'Backend service connection timed out (504 Gateway Timeout).';
+  }
+  if (err?.response?.status === 404 && err?.config?.url?.includes('/auth/login')) {
+    return 'Authentication endpoint not found on server.';
+  }
+  if (err?.response?.status === 429) {
     const retryAfter = err.response?.headers?.['retry-after'];
     return retryAfter
       ? `Too many requests. Please wait ${retryAfter} seconds and try again.`
       : 'Too many requests. Please slow down and try again in a moment.';
   }
-  if (err.response?.status === 503) {
+  if (err?.response?.status === 503) {
     return 'Database or backend service is temporarily unavailable. Please retry in a moment.';
   }
-  if (err.response?.data?.message) {
-    const msg = err.response.data.message;
-    return Array.isArray(msg) ? msg.join(', ') : msg;
-  }
-  return err.message || 'An unexpected error occurred';
+  return err?.message || 'An unexpected error occurred';
 }
 
 // Auth API

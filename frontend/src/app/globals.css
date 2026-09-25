@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --theme-primary: #10b981;
+  --theme-primary: #0284c7;
   --theme-secondary: #0f172a;
-  --theme-accent: #06b6d4;
+  --theme-accent: #0ea5e9;
   --theme-bg: #f8fafc;
   --theme-surface: #ffffff;
   --theme-text: #0f172a;
@@ -15,11 +15,11 @@
 }
 
 html.dark {
-  --theme-primary: #10b981;
+  --theme-primary: #0ea5e9;
   --theme-secondary: #38bdf8;
-  --theme-accent: #a855f7;
-  --theme-bg: #0b0f19;
-  --theme-surface: #111827;
+  --theme-accent: #0284c7;
+  --theme-bg: #070e18;
+  --theme-surface: #0b1626;
   --theme-text: #f8fafc;
   --theme-muted: #94a3b8;
   --theme-border: #1e293b;

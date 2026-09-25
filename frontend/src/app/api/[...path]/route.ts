@@ -6,6 +6,24 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 function getBackendTarget(): { protocol: string; hostname: string; port: number; basePath: string } {
+  const envTarget =
+    process.env.BACKEND_INTERNAL_URL ||
+    process.env.BACKEND_URL ||
+    process.env.NEXT_PUBLIC_API_URL;
+
+  if (envTarget && envTarget.startsWith('http')) {
+    try {
+      const parsed = new URL(envTarget);
+      const protocol = parsed.protocol || 'https:';
+      const hostname = parsed.hostname;
+      const port = parsed.port ? parseInt(parsed.port, 10) : protocol === 'http:' ? 80 : 443;
+      const basePath = parsed.pathname.replace(/\/$/, '') || '/api';
+      return { protocol, hostname, port, basePath };
+    } catch (e) {
+      console.warn('[Proxy Target Parse Warning]', e);
+    }
+  }
+
   if (process.env.NODE_ENV === 'development') {
     return { protocol: 'http:', hostname: 'localhost', port: 4000, basePath: '/api' };
   }
@@ -14,16 +32,24 @@ function getBackendTarget(): { protocol: string; hostname: string; port: number;
 
 async function executeProxy(req: NextRequest, { params }: { params: { path: string[] } }) {
   return new Promise<NextResponse>(async (resolve) => {
+    let hasResolved = false;
+    const safeResolve = (res: NextResponse) => {
+      if (!hasResolved) {
+        hasResolved = true;
+        resolve(res);
+      }
+    };
+
     try {
       const pathSegments = params?.path || [];
       const subPath = pathSegments.join('/');
       const url = new URL(req.url);
       const search = url.search || '';
-      
+
       const target = getBackendTarget();
       const requestPath = `${target.basePath}/${subPath}${search}`;
 
-      // Build safe forward headers
+      // Build forward headers
       const headers: Record<string, string> = {
         'Host': target.hostname,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Imprenta-CRM-Proxy/1.0',
@@ -61,6 +87,7 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
 
       const transport = target.protocol === 'https:' ? https : http;
 
+      // 6-second strict timeout to prevent long hanging connections
       const proxyReq = transport.request(
         {
           hostname: target.hostname,
@@ -68,8 +95,8 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
           path: requestPath,
           method: req.method,
           headers,
-          rejectUnauthorized: false, // Prevents TLS certificate chain rejection on serverless
-          timeout: 30000,
+          rejectUnauthorized: false,
+          timeout: 6000,
         },
         (backendRes) => {
           const chunks: Buffer[] = [];
@@ -86,22 +113,25 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
             if (contentType.includes('application/json')) {
               try {
                 const parsed = JSON.parse(fullBuffer.toString('utf8'));
-                return resolve(NextResponse.json(parsed, { status, headers: resHeaders }));
+                return safeResolve(NextResponse.json(parsed, { status, headers: resHeaders }));
               } catch {
-                return resolve(new NextResponse(fullBuffer, { status, headers: resHeaders }));
+                return safeResolve(new NextResponse(fullBuffer, { status, headers: resHeaders }));
               }
             }
 
-            return resolve(new NextResponse(fullBuffer, { status, headers: resHeaders }));
+            return safeResolve(new NextResponse(fullBuffer, { status, headers: resHeaders }));
           });
         }
       );
 
-      proxyReq.on('error', (err) => {
-        console.error('[Native Proxy Error]', err);
-        return resolve(
+      proxyReq.on('error', (err: any) => {
+        console.error('[Native Proxy Error]', err?.message || err);
+        return safeResolve(
           NextResponse.json(
-            { success: false, message: 'Backend connection error: ' + err.message },
+            {
+              success: false,
+              message: `Backend service (${target.hostname}) is currently unreachable: ${err.message || 'Connection refused'}. Please check if the backend server is running.`,
+            },
             { status: 502 }
           )
         );
@@ -109,9 +139,12 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
 
       proxyReq.on('timeout', () => {
         proxyReq.destroy();
-        return resolve(
+        return safeResolve(
           NextResponse.json(
-            { success: false, message: 'Backend connection timed out' },
+            {
+              success: false,
+              message: `Backend server (${target.hostname}) timed out. Please check that the backend service is active.`,
+            },
             { status: 504 }
           )
         );
@@ -123,7 +156,7 @@ async function executeProxy(req: NextRequest, { params }: { params: { path: stri
       proxyReq.end();
     } catch (err: any) {
       console.error('[Proxy Handler Exception]', err);
-      return resolve(
+      return safeResolve(
         NextResponse.json(
           { success: false, message: err.message || 'Internal proxy error' },
           { status: 500 }

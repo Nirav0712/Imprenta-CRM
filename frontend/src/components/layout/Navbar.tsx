@@ -35,9 +35,9 @@ export function Navbar() {
       {/* Left: Workspace & Search */}
       <div className="flex items-center gap-4 flex-1 max-w-md">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-400 border border-cyan-200/60 dark:border-cyan-800">
             <ShieldCheck className="w-3.5 h-3.5" />
-            Imprenta CRM
+            The Digital Connect
           </span>
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             <Building className="w-3.5 h-3.5 text-slate-400" />
@@ -50,7 +50,7 @@ export function Navbar() {
           <input
             type="text"
             placeholder="Search contacts, chats, leads..."
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-slate-800 dark:text-slate-100 placeholder-slate-400"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 text-slate-800 dark:text-slate-100 placeholder-slate-400"
           />
         </div>
       </div>
@@ -74,7 +74,7 @@ export function Navbar() {
             onClick={() => setMode('dark')}
             className={`p-1.5 rounded-lg transition-all ${
               theme.mode === 'dark'
-                ? 'bg-slate-900 dark:bg-slate-700 text-indigo-400 shadow-2xs font-semibold'
+                ? 'bg-slate-900 dark:bg-slate-700 text-cyan-400 shadow-2xs font-semibold'
                 : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
             }`}
             title="Dark Theme"
@@ -85,7 +85,7 @@ export function Navbar() {
             onClick={() => setMode('custom')}
             className={`p-1.5 rounded-lg transition-all ${
               theme.mode === 'custom'
-                ? 'bg-emerald-500 text-white shadow-2xs font-semibold'
+                ? 'bg-cyan-500 text-white shadow-2xs font-semibold'
                 : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
             }`}
             title="Custom Theme"
@@ -104,7 +104,7 @@ export function Navbar() {
         </Link>
         <Link
           href="/campaigns/new"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white shadow-xs transition-colors"
         >
           <Plus className="w-3.5 h-3.5" />
           New Campaign

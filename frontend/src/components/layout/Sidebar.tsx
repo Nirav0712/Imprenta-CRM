@@ -151,16 +151,16 @@ export function Sidebar() {
       {/* Brand Header */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-3 overflow-hidden">
-          <div className="w-9 h-9 rounded-xl bg-slate-900 dark:bg-emerald-500/20 dark:border dark:border-emerald-500/30 flex items-center justify-center text-white shadow-sm flex-shrink-0">
-            <Sparkles className="w-5 h-5 text-emerald-400" />
+          <div className="w-9 h-9 rounded-xl bg-slate-900/80 dark:bg-slate-800 border border-slate-700/60 flex items-center justify-center p-1 shadow-sm flex-shrink-0 overflow-hidden">
+            <img src="/logo.png" alt="TDC" className="w-full h-full object-contain" />
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <div className="font-bold text-slate-900 dark:text-white text-sm tracking-tight truncate">
-                Imprenta
+              <div className="font-bold text-slate-900 dark:text-white text-xs tracking-tight truncate">
+                The Digital Connect
               </div>
-              <div className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
-                CRM PLATFORM
+              <div className="text-[9px] font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider truncate">
+                GROUP OF CHAMUNDA ENT.
               </div>
             </div>
           )}
@@ -191,7 +191,7 @@ export function Sidebar() {
                     onClick={() => setCollapsed(false)}
                     className={`w-full flex items-center justify-center p-2.5 rounded-xl transition-all ${
                       hasActiveChild
-                        ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-semibold'
+                        ? 'bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-400 font-semibold'
                         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                     }`}
                     title={item.label}
@@ -208,7 +208,7 @@ export function Sidebar() {
                   onClick={() => toggleParent(item.label)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
                     hasActiveChild
-                      ? 'text-emerald-700 dark:text-emerald-400'
+                      ? 'text-cyan-700 dark:text-cyan-400'
                       : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                   }`}
                 >
@@ -235,20 +235,20 @@ export function Sidebar() {
                           href={child.href}
                           className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                             active
-                              ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-semibold shadow-2xs'
+                              ? 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 font-semibold shadow-2xs'
                               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800/50'
                           }`}
                         >
                           <div className="flex items-center gap-2.5 truncate">
                             <ChildIcon
                               className={`w-3.5 h-3.5 flex-shrink-0 ${
-                                active ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'
+                                active ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-400'
                               }`}
                             />
                             <span className="truncate">{child.label}</span>
                           </div>
                           {child.badge && (
-                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300">
+                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300">
                               {child.badge}
                             </span>
                           )}
@@ -270,14 +270,14 @@ export function Sidebar() {
               href={item.href || '#'}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 active
-                  ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-semibold shadow-2xs'
+                  ? 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 font-semibold shadow-2xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800/50'
               } ${collapsed ? 'justify-center' : ''}`}
               title={collapsed ? item.label : undefined}
             >
               <Icon
                 className={`w-4 h-4 flex-shrink-0 ${
-                  active ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'
+                  active ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-400'
                 }`}
               />
               {!collapsed && <span className="truncate">{item.label}</span>}
@@ -292,7 +292,7 @@ export function Sidebar() {
           <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 rounded-xl p-2.5">
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
                 <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
                   Durable Engine
                 </span>

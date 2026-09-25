@@ -129,18 +129,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password: credentials.password,
         });
       } catch (primaryErr: any) {
-        // If primary call failed (e.g. 502 Vercel rewrite, 404 or network issue), try direct fetch to backend
+        // If the server rejected credentials directly (400 or 401), fail immediately
+        if (primaryErr?.response?.status === 400 || primaryErr?.response?.status === 401) {
+          throw new Error(extractErrorMessage(primaryErr));
+        }
+
+        // If primary proxy failed (502 / network issue), attempt direct fetch with 5-second timeout
         const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
         const fallbackUrl = isLocal
           ? 'http://localhost:4000/api/auth/login'
           : 'https://backendcrm.imprenta.in/api/auth/login';
+
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 5000);
 
         try {
           const fallbackFetch = await fetch(fallbackUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: credentials.email.trim(), password: credentials.password }),
+            signal: controller.signal,
           });
+          clearTimeout(timer);
           if (fallbackFetch.ok) {
             res = await fallbackFetch.json();
           } else {
@@ -148,7 +158,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             throw new Error(errData.message || extractErrorMessage(primaryErr));
           }
         } catch (fallbackErr: any) {
-          throw new Error(fallbackErr.message || extractErrorMessage(primaryErr));
+          clearTimeout(timer);
+          throw new Error(extractErrorMessage(primaryErr));
         }
       }
 

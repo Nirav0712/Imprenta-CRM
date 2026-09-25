@@ -25,9 +25,9 @@ export interface ThemeConfig {
 
 export const DEFAULT_LIGHT_THEME: ThemeConfig = {
   mode: 'light',
-  primaryColor: '#10b981',
+  primaryColor: '#0284c7',
   secondaryColor: '#0f172a',
-  accentColor: '#06b6d4',
+  accentColor: '#0ea5e9',
   backgroundColor: '#f8fafc',
   surfaceColor: '#ffffff',
   textColor: '#0f172a',
@@ -42,11 +42,11 @@ export const DEFAULT_LIGHT_THEME: ThemeConfig = {
 
 export const DEFAULT_DARK_THEME: ThemeConfig = {
   mode: 'dark',
-  primaryColor: '#10b981',
+  primaryColor: '#0ea5e9',
   secondaryColor: '#38bdf8',
-  accentColor: '#a855f7',
-  backgroundColor: '#0b0f19',
-  surfaceColor: '#111827',
+  accentColor: '#0284c7',
+  backgroundColor: '#070e18',
+  surfaceColor: '#0b1626',
   textColor: '#f8fafc',
   mutedTextColor: '#94a3b8',
   borderColor: '#1e293b',
