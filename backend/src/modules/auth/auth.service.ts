@@ -67,30 +67,52 @@ export class AuthService implements OnModuleInit {
   private async seedDefaultAdmin() {
     try {
       if (this.userModel?.db?.readyState !== 1) return;
-      const defaultEmail = (process.env.ADMIN_EMAIL || 'thedigitalconnect712@gmail.com').trim().toLowerCase();
-      const defaultPassword = process.env.ADMIN_PASSWORD || 'Nirav@0712';
-      const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
+      const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'imprenta').trim();
 
-      const existing = await this.userModel.findOne({
-        $or: [
-          { email: defaultEmail },
-          { email: 'thedigitalconnect712@gmail.com' },
-        ],
-      }).exec();
+      const requiredAdmins = [
+        {
+          email: 'meetpatel125@gmail.com',
+          name: 'Meet Patel',
+          password: 'Alto@0819',
+        },
+        {
+          email: 'nikhil@imprenta.in',
+          name: 'Nikhil',
+          password: 'Nikhil@1980',
+        },
+      ];
 
-      if (!existing) {
-        const { hash, salt } = this.hashPassword(defaultPassword);
-        await this.userModel.create({
-          email: defaultEmail,
-          name: 'Imprenta Administrator',
-          passwordHash: hash,
-          salt,
-          organizationId: defaultOrg,
-          role: 'admin',
-          isActive: true,
-        });
-        this.logger.log(`Initialized administrative user (${defaultEmail}) for tenant: ${defaultOrg}`);
+      for (const admin of requiredAdmins) {
+        const { hash, salt } = this.hashPassword(admin.password);
+        const existing = await this.userModel.findOne({ email: admin.email.toLowerCase() }).exec();
+        if (!existing) {
+          await this.userModel.create({
+            email: admin.email.toLowerCase(),
+            name: admin.name,
+            passwordHash: hash,
+            salt,
+            organizationId: defaultOrg,
+            role: 'admin',
+            isActive: true,
+          });
+          this.logger.log(`Initialized administrative user (${admin.email}) for tenant: ${defaultOrg}`);
+        } else {
+          existing.name = admin.name;
+          existing.passwordHash = hash;
+          existing.salt = salt;
+          existing.isActive = true;
+          existing.role = 'admin';
+          existing.organizationId = defaultOrg;
+          await existing.save();
+          this.logger.log(`Updated administrative user credentials for (${admin.email})`);
+        }
       }
+
+      // Deactivate legacy test accounts
+      await this.userModel.updateMany(
+        { email: { $in: ['admin@imprenta.in', 'admin@imprenta.com', 'thedigitalconnect712@gmail.com'] } },
+        { $set: { isActive: false } },
+      ).exec().catch(() => {});
     } catch (err: any) {
       this.logger.warn(`Could not seed default admin user: ${err.message}`);
     }
@@ -110,22 +132,37 @@ export class AuthService implements OnModuleInit {
     }
 
     const normalizedIdentifier = email.trim().toLowerCase();
-    const adminEmail = (process.env.ADMIN_EMAIL || 'thedigitalconnect712@gmail.com').trim().toLowerCase();
-    const adminPassword = process.env.ADMIN_PASSWORD || 'Nirav@0712';
-    const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'default-org').trim();
+    const adminEmail = (process.env.ADMIN_EMAIL || 'nikhil@imprenta.in').trim().toLowerCase();
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Nikhil@1980';
+    const defaultOrg = (process.env.DEFAULT_ORGANIZATION_ID || 'imprenta').trim();
 
     const validAdminCredentials: Record<string, string[]> = {
-      'thedigitalconnect712@gmail.com': ['Nirav@0712', 'nirav@0712', 'admin123', 'Admin123'],
-      'thedigitalconnect712': ['Nirav@0712', 'nirav@0712', 'admin123', 'Admin123'],
-      'info@thedigitalconnect.in': ['Nirav@0712', 'nirav@0712', 'CQffEq6yU263', 'admin123', 'Admin123'],
-      [adminEmail]: [adminPassword, 'Nirav@0712', 'nirav@0712', 'admin123', 'Admin123'],
-      'admin@imprenta.com': ['admin123', 'Admin123', 'Nirav@0712', 'nirav@0712'],
-      'admin': ['admin123', 'Admin123', 'Nirav@0712', 'nirav@0712'],
+      'meetpatel125@gmail.com': ['Alto@0819'],
+      'meetpatel125': ['Alto@0819'],
+      'nikhil@imprenta.in': ['Nikhil@1980'],
+      'nikhil': ['Nikhil@1980'],
     };
+
+    if (adminEmail && adminPassword) {
+      validAdminCredentials[adminEmail] = [adminPassword];
+    }
 
     const validPasswords = validAdminCredentials[normalizedIdentifier] || [];
     const isAdminAttempt = validPasswords.length > 0;
     const isAdminPasswordMatch = isAdminAttempt && validPasswords.includes(password);
+
+    const getAdminName = (id: string) => {
+      if (id.includes('meet')) return 'Meet Patel';
+      if (id.includes('nikhil')) return 'Nikhil';
+      return 'Imprenta Administrator';
+    };
+
+    const getAdminEmail = (id: string) => {
+      if (id.includes('@')) return id;
+      if (id.includes('meet')) return 'meetpatel125@gmail.com';
+      if (id.includes('nikhil')) return 'nikhil@imprenta.in';
+      return adminEmail;
+    };
 
     const readyState = this.userModel?.db?.readyState;
 
@@ -135,8 +172,8 @@ export class AuthService implements OnModuleInit {
         this.logger.warn(`Admin login authenticated via fallback credentials (database readyState=${readyState})`);
         const fallbackAdminPayload = {
           _id: 'admin-root',
-          email: normalizedIdentifier.includes('@') ? normalizedIdentifier : adminEmail,
-          name: 'System Administrator',
+          email: getAdminEmail(normalizedIdentifier),
+          name: getAdminName(normalizedIdentifier),
           organizationId: defaultOrg,
           role: 'admin',
         };
@@ -160,8 +197,8 @@ export class AuthService implements OnModuleInit {
       if (isAdminPasswordMatch) {
         const fallbackAdminPayload = {
           _id: 'admin-root',
-          email: normalizedIdentifier.includes('@') ? normalizedIdentifier : adminEmail,
-          name: 'System Administrator',
+          email: getAdminEmail(normalizedIdentifier),
+          name: getAdminName(normalizedIdentifier),
           organizationId: defaultOrg,
           role: 'admin',
         };
@@ -175,8 +212,8 @@ export class AuthService implements OnModuleInit {
       const { hash, salt } = this.hashPassword(password);
       try {
         user = await this.userModel.create({
-          email: normalizedIdentifier.includes('@') ? normalizedIdentifier : `${normalizedIdentifier}@automarket.internal`,
-          name: 'System Administrator',
+          email: getAdminEmail(normalizedIdentifier),
+          name: getAdminName(normalizedIdentifier),
           passwordHash: hash,
           salt,
           organizationId: defaultOrg,
